@@ -2,6 +2,12 @@ const express = require('express');
 const path = require('path');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
+const logger = require('morgan')
+const createError = require('http-errors')
+const cookieParser = require('cookie-parser')
+
+const indexRouter = require('./routes')
+
 
 const isDev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 5000;
@@ -21,17 +27,19 @@ if (!isDev && cluster.isMaster) {
 
 } else {
   const app = express();
+  app.use(logger('dev'))
 
   // Priority serve any static files.
   app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
+  app.use(express.urlencoded({ extended: false }));
+  app.use(cookieParser());
 
   // Answer API requests.
-  app.get('/api', function (req, res) {
-    res.set('Content-Type', 'application/json');
-    res.send('{"message":"Hello from the custom server!"}');
-  });
+  app.use('/', indexRouter)
 
   // All remaining requests return the React app, so it can handle routing.
+
+  app.use(express.static(path.join(__dirname, 'public')));
   app.get('*', function(request, response) {
     response.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'));
   });
