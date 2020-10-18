@@ -1,5 +1,5 @@
 module.exports={
-    DATABASE_URL:envs.DATABASE_URL,
-    JWT_SECRET:envs.JWT_SECRET,   
-    PORT: envs.PORT
+    DATABASE_URL:process.env.DATABASE_URL,
+    JWT_SECRET:process.env.JWT_SECRET,   
+    PORT:process.env.PORT
   }
