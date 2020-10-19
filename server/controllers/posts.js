@@ -1,5 +1,5 @@
 const pool = require('../database')
-pool.connect();
+// pool.connect();
 
 // get all posts
 
@@ -78,9 +78,9 @@ async function createPost(req, res) {
     }
 }
 
-async function editPost(req, res) {
+async function updatePost(req, res) {
     const values = [req.body.title, req.body.body, req.body.uid, req.body.pid, req.body.username]
-    if(!values){
+    if(!req.body.title || !req.body.body || !req.body.uid || !req.body.pid || !req.body.username){
         res.status(400).json({
             status: 'error',
             error: 'Title and article fields are required',
@@ -88,10 +88,12 @@ async function editPost(req, res) {
     }
     const update_post_query = `UPDATE posts SET title= $1, body=$2, user_id=$3, author=$5, date_created=NOW() WHERE pid = $4`
     const update_post = await pool.query(update_post_query, values)
+    const {pid, title, body, author, date_created} = update_post
+    const new_post = {pid, title, body, author, date_created}
     try {
         res.status(201).json({
             status: 'success',
-            data: update_post.rows ,
+            data: new_post ,
           });
     } catch (error) {
         res.status(500).json({
@@ -100,3 +102,72 @@ async function editPost(req, res) {
           });
     }
 }
+
+async function deletePostComment(req, res) {
+    const post_id = req.body.post_id
+    const delete_comment_query = `DELETE FROM comments WHERE post_id = $1`
+    await pool.query(delete_comment_query, [post_id])
+    if(!post_id || post_id===''){
+        res.status(400).json({
+            status: 'error',
+            error: 'No comment selected',
+          });
+    }
+    try {
+        res.status(200).json({
+            status: 'success',
+            message: 'comment deleted successfully' ,
+          });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Failed to delete comment',
+          });
+    }
+}
+
+async function deletePost(req, res) {
+    const post_id = req.body.post_id
+    const delete_comment_query = `DELETE FROM posts WHERE pid = $1`
+    await pool.query(delete_comment_query, [post_id])
+    if(!post_id || post_id===''){
+        res.status(400).json({
+            status: 'error',
+            error: 'No post selected',
+          });
+    }
+    try {
+        res.status(200).json({
+            status: 'success',
+            message: 'post deleted successfully' ,
+          });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Failed to delete post',
+          });
+    }
+}
+
+async function updateLikes(req, res) {
+    const uid = [req.body.uid]
+    const post_id = String(req.body.post_id)
+    const values = [ uid, post_id ]
+    const update_likes_query = `UPDATE posts SET like_user_id = like_user_id || $1, likes = likes + 1  WHERE NOT (like_user_id @> $1) AND pid = ($2)`
+    const likes = await pool.query(update_likes_query, values)
+    try {
+        res.status(200).json({
+            status: 'success',
+            likes: likes.rows ,
+          });
+        
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Failed to like post',
+          });
+    }
+
+    
+}
+module.exports = { getAllPosts,getOnePost, createPost, updatePost, deletePostComment, deletePost, updateLikes}
