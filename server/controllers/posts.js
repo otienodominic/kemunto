@@ -1,19 +1,27 @@
-const pool = require('../database')
-// pool.connect();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const {JWT_SECRET, DATABASE_URL} = require('../config')
+const {Pool} = require('pg')
+
+const pool = new Pool({
+    connectionString: DATABASE_URL,
+  });
+  
 
 // get all posts
 
 async function getAllPosts(req, res) {
     const get_posts_query = `SELECT * FROM posts ORDER BY date_created DESC`;
     const all_posts = await pool.query(get_posts_query)
-    if(all_posts.rowCount < 1){
+    const posts = all_posts.rows
+    if(!posts){
         res.status(400).json({
             status: "error",
             message: "No posts available"
         })
     }
     const postsarr = [];
-    await all_posts.forEach(element => {
+    posts.forEach(element => {
         const {pid, title, body, author, date_created} = element
         const values = {pid, title, body, author, date_created}   
         postsarr.push(values)     
@@ -41,18 +49,17 @@ async function getOnePost(req, res) {
     }
     const one_post_query = `SELECT * FROM posts WHERE pid=$1`
     const one_post = await pool.query(one_post_query)
-    if(one_post.rowCount < 1){
+    const single_post = one_post.rows[0]
+    if(!single_post){
         res.status(400).json({
             status: "error",
             message: "No post available"
         })
-    }
-    const {pid, title, body, author, date_created} = one_post
-        const values = {pid, title, body, author, date_created}
+    }    
     try {
         res.status(200).json({
             message: "Success",
-            data: values,
+            data: single_post,
         })
     } catch (error) {
         res.status(500).json({
@@ -87,9 +94,8 @@ async function updatePost(req, res) {
           });
     }
     const update_post_query = `UPDATE posts SET title= $1, body=$2, user_id=$3, author=$5, date_created=NOW() WHERE pid = $4`
-    const update_post = await pool.query(update_post_query, values)
-    const {pid, title, body, author, date_created} = update_post
-    const new_post = {pid, title, body, author, date_created}
+    const update_post = await pool.query(update_post_query, values)    
+    const new_post = update_post.rows
     try {
         res.status(201).json({
             status: 'success',

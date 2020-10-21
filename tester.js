@@ -1,37 +1,25 @@
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const {JWT_SECRET} =  require('./server/config');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const {JWT_SECRET, DATABASE_URL} = require('./server/config')
+const {Pool} = require('pg')
+
+const pool = new Pool({
+    connectionString: DATABASE_URL,
+  });
+const email = 'moro@hotmail.com'
+
+ 
 
 
-// helper to hash password
-// const hashPassword = (password) => {
-//   return bcrypt.hash(password, 10);
-// };
-
-
-// hashing and waiting
-
-
-
-
-// Helper to compare password
-const comparePassword = (password, hashedPassword) => {
-  return bcrypt.compare(password, hashedPassword);
-};
-
-const isValidEmail = (email) => {
-  const testEmail = /\S+@\S+\.\S+/.test(email);
-  if (!testEmail) {
-    return 'Invalid Email';
+async function user(req, res) {
+  const find_user_query = `SELECT * FROM users WHERE email=$1`
+  const find_user = await pool.query(find_user_query, [email])
+  try {
+    
+   return find_user.rows
+  
+  } catch (error) {
+    return "error"
   }
-  return email;
-};
-
-const generateToken = (User) => {
-  const token = jwt.sign(User, JWT_SECRET, { expiresIn: '7d' });
-  return token;
-};
-
-// module.exports = { hashPassword, comparePassword, isValidEmail, generateToken };
-
-console.log(hashedPassword)
+}
+console.log(user())

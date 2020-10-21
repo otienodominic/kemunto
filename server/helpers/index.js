@@ -26,4 +26,5 @@ const generateToken = (User) => {
   return token;
 };
 
+
 module.exports = { hashPassword, comparePassword, isValidEmail, generateToken };

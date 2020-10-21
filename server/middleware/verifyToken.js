@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const {JWT_SECRET} = require('../config')
 
-module.exports = async(req,res,next)=>{
+async function verifyToken(req,res,next){
     // const {authorization} = req.headers
     //authorization === Bearer ewefwegwrherhe
     let token = req.headers["x-access-token"];
@@ -19,5 +19,5 @@ module.exports = async(req,res,next)=>{
         
     })
 }
-
+module.exports = {verifyToken}
 
