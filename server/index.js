@@ -5,6 +5,7 @@ const numCPUs = require('os').cpus().length;
 const logger = require('morgan')
 const createError = require('http-errors')
 const cookieParser = require('cookie-parser')
+var bodyParser = require('body-parser')
 
 const indexRouter = require('./routes')
 
@@ -34,6 +35,12 @@ if (!isDev && cluster.isMaster) {
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
 
+  // parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
   // Answer API requests.
   app.use('/', indexRouter)
 
@@ -45,6 +52,6 @@ if (!isDev && cluster.isMaster) {
   });
 
   app.listen(PORT, function () {
-    console.error(`Node ${isDev ? 'dev server' : 'cluster worker '+process.pid}: listening on port ${PORT}`);
+    console.error(`Node ${isDev ? 'development server' : 'cluster worker '+process.pid}: listening on port ${PORT}`);
   });
 }

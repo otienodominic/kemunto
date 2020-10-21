@@ -1,70 +1,26 @@
 const pool = require('../database')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {JWT_SECRET} = require('../config')
+const {hashPassword, comparePassword, isValidEmail, generateToken} = require('../helpers')
+// const {JWT_SECRET} = require('../config')
 
 // pool.connect();
 
-const Helper = {
-    isValidEmail(email) {
-        return /\S+@\S+\.\S+/.test(email);
-      },
-    hashPassword(password) {
-        return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-      },
-    comparePassword(password, hashedPassword) {
-        return bcrypt.compareSync(password, hashedPassword);
-      },
-    generateToken(userObj) {
-        const token = jwt.sign(userObj, JWT_SECRET);
-        return token;
-      }         
-
-}
 async function registerUser(req, res) {
-    const storedEmail = req.body.email.trim().toLowerCase();
-    const hashedPassword = Helper.hashPassword(req.body.password.trim()); 
-    const values = [req.body.username, storedEmail, req.body.email_verified, hashedPassword]
-    const register_user_query = `INSERT INTO users(username, email, email_verified, password,date_created) VALUES($1, $2, $3, $4, NOW()) ON CONFLICT DO NOTHING`
-    const checkFields = (username && email && password)
-    const checkEmail = Helper.isValidEmail(email.trim());
-
-    if (!checkFields) {
-        res.status(400).json({
-          status: 'error',
-          message: 'All fields are required',
-        });
-      } else if (!checkEmail) {
-        res.status(400).json({
-          status: 'error',
-          message: 'Please provide a valid email',
-        });
-      }  
-     const find_user_query = `SELECT * FROM users WHERE email=$1`
-     const find_user = await pool.query(find_user_query, [storedEmail]) 
-
-     if(find_user.rowCount > 0 ){ 
-         res.status(400).json({
-             status: 'error',
-             message: 'User already exists with that email'
-         })
-     }
-    await pool.query(register_user_query, values)     
-    try {
-        res.status(201).json({
-            status: "success",
-            data: {
-                message: "User account successfully created!",
-                username,
-            }
-        })
-    } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            error: 'Failed to create user',
-          });
-    }
-       
+  const values = [req.body.username, req.body.email, req.body.email_verified, req.body.password]
+  const register_user_query = `INSERT INTO users(username, email, email_verified, password,date_created) VALUES($1, $2, $3, $4,NOW()) ON CONFLICT DO NOTHING`
+  const new_user = await pool.query(register_user_query, values)
+  try {
+    res.status(200).json({
+      status: 'success',
+      data: new_user.rows,
+    }) 
+  } catch (error) {
+    res.status(400).json({
+      status: 'error',
+      error: 'Failed to create new user',
+    })
+  }
 }
 
 async function loginUser(req, res) {
