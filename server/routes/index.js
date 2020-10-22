@@ -18,16 +18,16 @@ const {postComment, updateComment, deleteComment, getAllPostComments} = require(
     POSTS ROUTES SECTION
 */
 
-router.get('/api/get/allposts', getAllPosts)
-router.get('/api/get/post', getOnePost)
-router.post('/api/post/posttodb', createPost)
-router.put('/api/put/post', updatePost)
-router.delete('/api/delete/postcomments', deletePostComment)
-router.delete('/api/delete/post', deletePost)
-router.put('/api/put/likes', updateLikes);
+router.get('/api/get/allposts', verifyToken,getAllPosts)
+router.get('/api/get/post',verifyToken, getOnePost)
+router.post('/api/post/posttodb',verifyToken, createPost)
+router.put('/api/put/post',verifyToken, updatePost)
+router.delete('/api/delete/postcomments',verifyToken, deletePostComment)
+router.delete('/api/delete/post',verifyToken, deletePost)
+router.put('/api/put/likes',verifyToken, updateLikes);
 
 //Search Posts
-router.get('/api/get/searchpost', (req, res, next) => {
+router.get('/api/get/searchpost',verifyToken, (req, res, next) => {
   search_query = String(req.query.search_query)
   pool.query(`SELECT * FROM posts
               WHERE search_vector @@ to_tsquery($1)`,
@@ -41,10 +41,10 @@ router.get('/api/get/searchpost', (req, res, next) => {
     COMMENTS ROUTES SECTION
 */
 
-router.post('/api/post/commenttodb', postComment)
-router.put('/api/put/commenttodb', updateComment)
-router.delete('/api/delete/comment', deleteComment)
-router.get('/api/get/allpostcomments', getAllPostComments)
+router.post('/api/post/commenttodb',verifyToken, postComment)
+router.put('/api/put/commenttodb',verifyToken, updateComment)
+router.delete('/api/delete/comment',verifyToken, deleteComment)
+router.get('/api/get/allpostcomments',verifyToken, getAllPostComments)
 
 /*
   USER PROFILE SECTION
@@ -52,18 +52,18 @@ router.get('/api/get/allpostcomments', getAllPostComments)
 
 router.post('/api/posts/userprofiletodb',registerUser)  
 router.post('/api/get/userprofilefromdb', loginUser )
-router.get('/api/get/userposts', getUserPosts)
+router.get('/api/get/userposts',verifyToken, getUserPosts)
 // Retrieve another users profile from db based on username 
-router.get('/api/get/otheruserprofilefromdb', getOtherUserProfile);
+router.get('/api/get/otheruserprofilefromdb',verifyToken, getOtherUserProfile);
 //Get another user's posts based on username
-router.get('/api/get/otheruserposts', getOtherUserPosts);
+router.get('/api/get/otheruserposts',verifyToken, getOtherUserPosts);
 
 /*
   MESSAGE SECTION
 */
 
 //Delete a message with the message id
-router.delete('/api/delete/usermessage', (req, res, next) => {
+router.delete('/api/delete/usermessage',verifyToken, (req, res, next) => {
   const mid = req.body.mid
   pool.query(`DELETE FROM messages
               WHERE mid = $1`,
@@ -74,7 +74,7 @@ router.delete('/api/delete/usermessage', (req, res, next) => {
 });
 
 //Send Message to db
-router.post('/api/post/messagetodb', (req, res, next) => {
+router.post('/api/post/messagetodb',verifyToken, (req, res, next) => {
   const from_username = String(req.body.message_sender)
   const to_username = String(req.body.message_to)
   const title = String(req.body.title)
@@ -89,7 +89,7 @@ router.post('/api/post/messagetodb', (req, res, next) => {
 });
 
 //Get another user's posts based on username
-router.get('/api/get/usermessages', (req, res, next) => {
+router.get('/api/get/usermessages',verifyToken, (req, res, next) => {
   const username = String(req.query.username)  
   pool.query(`SELECT * FROM messages WHERE message_to = $1`,
     [ username ], (q_err, q_res) => {
