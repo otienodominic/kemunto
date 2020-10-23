@@ -7,51 +7,49 @@ const pool = new Pool({
     connectionString: DATABASE_URL,
   });
 async function registerUser(req, res) {
-  const {username, email, email_verified,password} = req.body
+  const {username, email, password} = req.body
+  //email_verified,
   const better_user = username
   const validEmail = email
-  const verified_email =(email===email_verified) ? true: false
-  const checkFields = username &&  email && email_verified && password
+  // email_verified = true
+  // const verified_email =(email===email_verified) ? true: false
+ 
+
+  //var verified_email = (a,b) => a===b
+  const checkFields = username &&  email 
   const hashedPassword  = bcrypt.hashSync(password, 12)
 
-  const find_by_username = `SELECT * FROM users WHERE username=$1`
-  const find_by_email = `SELECT * FROM users WHERE email=$1`
+  const find_by_username = `SELECT username FROM users WHERE username=$1`
+  const find_by_email = `SELECT email FROM users WHERE email=$1`
   const existing_username = await pool.query(find_by_username,[better_user])
   const existing_email = await pool.query(find_by_email, [validEmail])
+
+  const exists_mail = existing_email.rowCount
+  const exists_username = existing_username.rowCount
   
-  if(!verified_email){
-    res.status(400).json({
-      status: 'error',
-      Error: 'Email did not match!',
-    });
-  }else if (!checkFields) {
-    res.status(400).json({
-      status: 'error',
-      error: 'All fields are required',
-    });
-  }else if (existing_email || existing_username) {
-    res.status(400).json({
-      status: 'error',
-      error: 'User already exists!',
-    });
+  // if(verified_email(validEmail, email_verified) == true){
+  //   res.status(400).send({ message: 'Email did not match!' }) 
+
+  // }
+  // else 
+  if (!checkFields) {
+    res.status(400).send({ message: 'All fields are required' })     
+  }
+  else if (exists_mail > 0 || exists_username > 0) {
+    res.status(400).send({ message: 'User already exists!' })
+    
   }
   else{
-  const register_user_query = `INSERT INTO users(username, email, email_verified, password,date_created) VALUES($1, $2, $3, $4,NOW()) ON CONFLICT DO NOTHING`
-  const values = [better_user, validEmail, verified_email, hashedPassword]
-  const new_user = await pool.query(register_user_query, values)
-  const {username, email} = new_user
-  try {
-    res.status(200).json({
-      status: 'success',
-      data: {
-        username, email
-      },
-    }) 
+  const register_user_query = `INSERT INTO users(username, email,  password,date_created) VALUES($1, $2, $3, NOW()) ON CONFLICT DO NOTHING`
+  const values = [better_user, validEmail,  hashedPassword]
+  //verified_email,
+  await pool.query(register_user_query, values)
+  //const {username, email} = new_user
+  try {    
+    res.send({ message: 'success user saved' })
   } catch (error) {
-    res.status(400).json({
-      status: 'error',
-      error: 'Failed to create new user',
-    })
+    res.status(400).send({ message: 'Failed to create user' })
+    
   }
 }
 }
@@ -60,10 +58,7 @@ async function loginUser(req, res) {
     const { email, password } = req.body;
     const checkFields = email && password
     if (!checkFields) {
-        res.status(400).json({
-          status: 'error',
-          error: 'Email and password fields are required',
-        });
+      res.status(400).send({ message: 'All fields are required' })        
       }
       const find_user_query = `SELECT * FROM users WHERE email=$1`
       const find_user = await pool.query(find_user_query, [email]) 
@@ -75,10 +70,7 @@ async function loginUser(req, res) {
       
 
       if (!verifyPwd) {
-        res.status(400).json({
-          status: 'error',
-          message: 'Incorrect password',
-        });
+        res.status(400).send({ message: 'All fields are required' })        
       }
       const userObj = {
         sub: User.uid,
@@ -88,18 +80,15 @@ async function loginUser(req, res) {
       const token = jwt.sign({ userObj }, JWT_SECRET);
 
       try {
-        res.status(200).json({
-            status: 'success',
-            data: {
-              token,
-              User,
-            },
-          }) 
-      } catch (error) {
-        res.status(400).json({
-            status: 'error',
-            error: 'Failed to get user',
+        res.status(200).send({
+            id: User.uid,
+            username: User.username,
+            email: User.email,            
+            accessToken: token
           });
+      } catch (error) {
+        res.status(400).send({ message: 'Failed to get user' })
+        
       }
 }
 

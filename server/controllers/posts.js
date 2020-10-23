@@ -69,8 +69,11 @@ async function getOnePost(req, res) {
 }
 
 async function createPost(req, res) {
-    const values = [ req.body.title, req.body.body]
-    const insert_post_query = `INSERT INTO posts(title, body, date_created) VALUES($1, $2, NOW())`
+    const user_id = req.user.uid
+    const author = req.user.username
+    const values = [ req.body.title, req.body.body, user_id, author]
+
+    const insert_post_query = `INSERT INTO posts(title, body, user_id, author,date_created) VALUES($1, $2, $3, $4, NOW())`
     const creatPost = await pool.query(insert_post_query, values)
     try {
         res.status(201).json({
