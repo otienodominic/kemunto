@@ -66,11 +66,10 @@ async function loginUser(req, res) {
       // const {uid, username, userMail: email, hashedPassword: password} = find_user
       //const verifyPwd  = await Helper.comparePassword(password.trim(), hashedPassword)
 
-      const verifyPwd = bcrypt.compareSync( password, User.password);
-      
+      const verifyPwd = bcrypt.compareSync( password, User.password);      
 
       if (!verifyPwd) {
-        res.status(400).send({ message: 'All fields are required' })        
+        res.status(400).send({ message: 'email or password is incorrect!' })        
       }
       const userObj = {
         sub: User.uid,

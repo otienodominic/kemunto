@@ -3,19 +3,27 @@ import axios from "axios";
 /*
     POSTS ROUTES SECTION
 */
+  
+  const getAllPosts =()=> {
+    return axios
+    .get('/api/get/allposts')
+    .then((response) => {    
 
+      return response.data
+      // .sort((a, b) => parseFloat(b.pid) - parseFloat(a.pid));
+    });
+  }
 
-export const getAllPosts = async() => {
-    const posts = await axios.get("/api/get/allposts").catch((e) =>{
-      console.error(e)
-    })
-    return posts
-  };
-
+  
+  
 
 /*
   USER PROFILE SECTION
 */
+
+export default {
+  getAllPosts
+}
 
 
 

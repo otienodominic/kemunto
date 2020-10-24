@@ -1,8 +1,23 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import AuthService from "../services/auth.service";
+import UserService from '../services/user.service'
+const {getCurrentUser} = AuthService
+const {getAllPosts} = UserService
 
 const Profile = () => {
-  const currentUser = AuthService.getCurrentUser();
+ 
+  const [posts, setPosts] = useState([])
+  
+  const currentUser = getCurrentUser();
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+        const posts = await getAllPosts()
+        console.log(posts)
+        setPosts(posts)
+    };    
+    fetchPosts()
+}, []);
 
   return (
     <div className="container">
@@ -21,11 +36,21 @@ const Profile = () => {
       <p>
         <strong>Email:</strong> {currentUser.email}
       </p>
-      <strong>Authorities:</strong>
-      <ul>
-        {currentUser.roles &&
-          currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
-      </ul>
+      <strong>Posts:</strong>
+            <div>
+      {
+        posts.map((post, key) => {
+            return (
+            <>
+            <div key={key}>{post.title}</div>
+            <div key={key}>{post.body}</div>
+            <strong>Date Posted</strong>
+            <div key={key}>{post.date_created.getFullYear()}</div>              
+            </>)
+        })
+      }
+      
+      </div>
     </div>
   );
 };

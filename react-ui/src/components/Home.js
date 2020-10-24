@@ -11,7 +11,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Icon from '@material-ui/core/Icon';
 import Link from '@material-ui/core/Link';
 
-import {getAllPosts} from "../services/user.service";
+ import UserService from "../services/user.service";
 
 
 const useStyles = makeStyles({
@@ -68,7 +68,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-        const contents = await getAllPosts()
+        const contents = await UserService.getAllPosts()
         setContents( contents )        
     };    
     fetchPosts()

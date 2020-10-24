@@ -15,10 +15,8 @@ async function getAllPosts(req, res) {
     const all_posts = await pool.query(get_posts_query)
     const posts = all_posts.rows
     if(!posts){
-        res.status(400).json({
-            status: "error",
-            message: "No posts available"
-        })
+        res.status(400).send({ message: 'No posts available' }) 
+       
     }
     const postsarr = [];
     posts.forEach(element => {
@@ -26,16 +24,12 @@ async function getAllPosts(req, res) {
         const values = {pid, title, body, author, date_created}   
         postsarr.push(values)     
     });
-    try {
-        res.status(200).json({
-            message: "Success",
-            data: postsarr,
-        })
-        
+    try {    
+        res.status(200).send(            
+            postsarr,
+        )        
     } catch (error) {
-        res.status(500).json({
-            message: "Failed to get posts!"
-        })
+        res.status(400).send({ message: 'Failed to get posts' })         
     }
 }
 
