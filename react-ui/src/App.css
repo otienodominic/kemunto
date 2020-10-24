@@ -21,3 +21,15 @@ a:hover {
   background-image: url("./images/background.png");
   
 }
+.card col-md-12 {
+  width: 50%;
+  padding: 0 40px
+}
+.Login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid lightgray;
+  padding: 50px;
+}

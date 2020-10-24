@@ -20,19 +20,22 @@ const register = (username, email, password) => {
     // })
 
 };
+
 const login = (email, password) => {
-    axios.post('/api/get/userprofilefromdb',{
-            password,
-            email
-        }) 
+  return axios
+    .post('/api/get/userprofilefromdb', {
+      email,
+      password,
+    })
     .then((response) => {
-      if (response.data.token) {
-        localStorage.setItem('user', JSON.stringify(response.data));
+      if (response.data.accessToken) {
+        localStorage.setItem("user", JSON.stringify(response.data));
       }
 
       return response.data;
     });
 };
+
 
 const logout = () => {
   localStorage.removeItem('user');

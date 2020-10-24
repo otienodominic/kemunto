@@ -1,9 +1,62 @@
+import {data} from '../services/data'
 import React, { useState, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
+import CardMedia from '@material-ui/core/CardMedia';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import '../App.css'
 
 import AuthService from "../services/auth.service";
+const{login} = AuthService
+
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    flexWrap: "wrap",
+    justifyContent: "space-between"
+  },
+  paper: {
+    minHeight: "65px",
+    display: 'flex',
+    flexWrap: "wrap",
+    justifyContent: "space-evenly"
+  },
+  media: {
+    width: "100%",
+    minHeight: 150,
+    maxWidth: 200,
+  },
+  skills: {
+    fontVariant: "all-small-caps",
+    fontSize: "large",
+    border: "thin",
+    borderStyle: "dotted",
+    borderRadius: "5px",
+    margin: "5px 5px 5px 8px",
+    padding: "5px",
+    background: "#dbe9f1",
+    fontWeight: "bold"
+  },
+  contact: {
+    margin: "20px 10px 0px 0px",
+  },
+  items: {
+    margin: "5px",
+  },
+  links: {
+    color: "black",
+    borderBottomStyle: "dotted",
+    border: "thin",
+  },
+  header: {
+    textAlign: "left",
+    padding: "5%",
+    margin: "1%"
+  }
+  
+});
 
 const required = (value) => {
   if (!value) {
@@ -18,6 +71,9 @@ const required = (value) => {
 const Login = (props) => {
   const form = useRef();
   const checkBtn = useRef();
+  const classes = useStyles();
+  const {profilePic} =data
+  const profilepic= "images/" + profilePic;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,7 +99,7 @@ const Login = (props) => {
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-      AuthService.login(email, password).then(
+      login(email, password).then(
         () => {
           props.history.push("/profile");
           window.location.reload();
@@ -66,14 +122,14 @@ const Login = (props) => {
   };
 
   return (
-    <div className="col-md-12">
-      <div className="card card-container">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
-
+    <div className="Login">
+      
+      <Grid item sm={3} className={classes.media}>
+              <CardMedia
+                className={classes.media}
+                image={profilepic}
+              />
+        </Grid>
         <Form onSubmit={handleLogin} ref={form}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
@@ -117,7 +173,7 @@ const Login = (props) => {
           )}
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
-      </div>
+      
     </div>
   );
 };
