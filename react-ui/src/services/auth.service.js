@@ -1,7 +1,5 @@
  import axios from 'axios';
 
-//const API_URL = "http://localhost:5000/api/auth/";
-
 const register = (username, email, password) => {
   return axios.post('/api/posts/userprofiletodb', {
     username,
@@ -23,16 +21,10 @@ const register = (username, email, password) => {
 
 };
 const login = (email, password) => {
-    fetch('/api/get/userprofilefromdb',{
-        method:"post",
-        headers:{
-            'Content-Type':'application/json'
-        },
-        body:JSON.stringify({
+    axios.post('/api/get/userprofilefromdb',{
             password,
             email
-        })
-    })
+        }) 
     .then((response) => {
       if (response.data.token) {
         localStorage.setItem('user', JSON.stringify(response.data));

@@ -1,28 +1,23 @@
-import authHeader from "./auth-header";
+import axios from "axios";
+// import authHeader from "./auth.header";
 /*
     POSTS ROUTES SECTION
 */
 
 
+export const getAllPosts = async() => {
+    const posts = await axios.get("/api/get/allposts").catch((e) =>{
+      console.error(e)
+    })
+    return posts
+  };
 
 
 /*
   USER PROFILE SECTION
 */
 
-const registerUser = () =>{
-    return fetch('/api/get/allposts', {
-        method: 'POST',
-        withCredentials: true,
-        credentials: 'include',
-        headers: {
-            'Authorization': authHeader(),            
-            'Content-Type': 'application/json'
-        }
-    })
-}
 
 
 
-//router.post('/api/posts/userprofiletodb',registerUser)  
-//router.post('/api/get/userprofilefromdb', loginUser )
+
