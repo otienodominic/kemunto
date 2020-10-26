@@ -63,22 +63,22 @@ async function getOnePost(req, res) {
 }
 
 async function createPost(req, res) {
-    const user_id = req.user.uid
+    // const user_id = req.user.uid
+    // const author = req.user.username
+    const user_id = req.user.id
     const author = req.user.username
-    const values = [ req.body.title, req.body.body, user_id, author]
+    const {title, body} = req.body
+    const values = [ title, body, user_id, author]
 
     const insert_post_query = `INSERT INTO posts(title, body, user_id, author,date_created) VALUES($1, $2, $3, $4, NOW())`
     const creatPost = await pool.query(insert_post_query, values)
+    
     try {
-        res.status(201).json({
-            status: 'success',
-            data:creatPost.rows ,
-          });
+        res.send({ message: 'Post saved successfully!' })
+        
     } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            message: 'Failed to save post',
-          });
+        res.status(400).send({message: 'Failed to save post!'})
+        
     }
 }
 

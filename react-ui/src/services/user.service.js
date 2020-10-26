@@ -14,7 +14,13 @@ import axios from "axios";
     });
   }
 
+  const createPost = (title, body) => {
+    return axios.post('/api/post/posttodb', {
+      title,
+      body,
+    });      
   
+  };
   
 
 /*
@@ -22,7 +28,7 @@ import axios from "axios";
 */
 
 export default {
-  getAllPosts
+  getAllPosts, createPost
 }
 
 
