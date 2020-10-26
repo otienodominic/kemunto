@@ -1,8 +1,12 @@
 import React, {useState, useEffect} from "react";
 import AuthService from "../services/auth.service";
 import UserService from '../services/user.service'
+import TextField from '@material-ui/core/TextField'
+// import Form from '@material-ui/core/form'
+
 const {getCurrentUser} = AuthService
 const {getAllPosts} = UserService
+
 
 const Profile = () => {
  
@@ -25,17 +29,28 @@ const Profile = () => {
         <h3>
           <strong>{currentUser.username}</strong> Profile
         </h3>
-      </header>
-      <p>
-        <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)} ...{" "}
-        {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
-      </p>
+      </header>      
       <p>
         <strong>Id:</strong> {currentUser.id}
       </p>
       <p>
         <strong>Email:</strong> {currentUser.email}
       </p>
+      
+      <div><p>Title:</p>
+        <TextField 
+        variant='outlined'
+        color= 'secodary'
+        />
+      </div>
+      <div><p>Body:</p>
+        <TextField 
+        variant='outlined'
+        
+        />
+      </div>
+      
+
       <strong>Posts:</strong>
             <div>
       {
@@ -45,7 +60,7 @@ const Profile = () => {
             <div key={key}>{post.title}</div>
             <div key={key}>{post.body}</div>
             <strong>Date Posted</strong>
-            <div key={key}>{post.date_created.getFullYear()}</div>              
+            <div key={key}>{post.date_created}</div>              
             </>)
         })
       }
