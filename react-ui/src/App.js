@@ -64,8 +64,8 @@ const App = () => {
 
           {currentUser && (
             <li className="nav-item">
-              <Link to={"/user"} className="nav-link">
-                User
+              <Link to={"/create-post"} className="nav-link">
+                Create Post
               </Link>
             </li>
           )}

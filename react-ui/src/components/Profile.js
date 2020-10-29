@@ -9,6 +9,7 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
+import Textarea from 'react-validation/build/textarea'
 
 import '../App.css'
 
@@ -106,56 +107,7 @@ const Profile = () => {
       <p>
         <strong>Email:</strong> {currentUser.email}
       </p>
-      
-      <div>
-      <Form onSubmit={handlePost} ref={form}>
-        
-      <CheckButton style={{ display: "none" }} ref={checkBtn} />
-     </Form>
-
-
-
-     <Form>
-     {!successful && (
-            <div>
-              <div>
-       <TextField 
-            className={classes.root} 
-            label="The Title" 
-            variant="filled" 
-            onChange={onChangeTitle} />
-      </div> 
-      <div>
-        <TextField
-            style={{textAlign: 'left'}} 
-            className={classes.root} 
-            label="What is on your mind?" 
-            onChange={onChangeBody} 
-            variant="outlined" 
-            multiline={true}/>
-      </div>
-
-              <div className="form-group">
-                <button className="btn btn-primary btn-block">POST</button>
-              </div>
-            </div>
-          )}
-
-          {message && (
-            <div className="form-group">
-              <div
-                className={ successful ? "alert alert-success" : "alert alert-danger" }
-                role="alert"
-              >
-                {message}
-              </div>
-            </div>
-          )}
-          <CheckButton style={{ display: "none" }} ref={checkBtn} />
-
-     </Form>
-
-      </div>
+           
 
       <strong>Posts:</strong>
             <div>
@@ -163,8 +115,9 @@ const Profile = () => {
         posts.map((post, key) => {
             return (
             <>
+            <div key={key}>{post.author}</div>
             <div key={key}>{post.title}</div>
-            <div key={key}>{post.body}</div>
+            <div key={key}>{post.body}</div>           
             <strong>Date Posted</strong>
             <div key={key}>{post.date_created}</div>              
             </>)

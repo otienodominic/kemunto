@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
@@ -109,14 +110,9 @@ const Register = (props) => {
   };
 
   return (
-    <div className="col-md-12">
+    <div className="Register">
       <div className="card card-container">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
-
+        
         <Form onSubmit={handleRegister} ref={form}>
           {!successful && (
             <div>

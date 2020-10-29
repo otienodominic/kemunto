@@ -2,6 +2,7 @@ import {data} from '../services/data'
 import React, { useState, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import Textarea from 'react-validation/build/textarea'
 import CheckButton from "react-validation/build/button";
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
@@ -58,15 +59,15 @@ const useStyles = makeStyles({
   
 });
 
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    );
-  }
-};
+// const required = (value) => {
+//   if (!value) {
+//     return (
+//       <div className="alert alert-danger" role="alert">
+//         This field is required!
+//       </div>
+//     );
+//   }
+// };
 
 const Login = (props) => {
   const form = useRef();
@@ -139,7 +140,7 @@ const Login = (props) => {
               name="email"
               value={email}
               onChange={onChangeEmail}
-              validations={[required]}
+              // validations={[required]}
             />
           </div>
 
@@ -151,7 +152,7 @@ const Login = (props) => {
               name="password"
               value={password}
               onChange={onChangePassword}
-              validations={[required]}
+              // validations={[required]}
             />
           </div>
 
