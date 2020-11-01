@@ -54,4 +54,8 @@ label {
   background-color: #93acc9;
   display: flex;
 }
+.list{
+  border: 1px solid rebeccapurple;
+}
+
 

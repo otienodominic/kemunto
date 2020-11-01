@@ -21,32 +21,14 @@ import '../App.css'
 // import Form from '@material-ui/core/form'
 
 const {getCurrentUser} = AuthService
-const {getAllPosts} = UserService
+const {getAllPosts, getMyPosts} = UserService
 
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    flexGrow: 1,
-  }
-  
-});
 
 const Profile = () => {
-  const [title, setTitle] = useState('')
-  const [body, setBody] = useState('')
-  const [successful, setSuccessful] = useState(false);
-  const [message, setMessage] = useState("");
-
-  const form = useRef();
-  const checkBtn = useRef();
- 
-  const [posts, setPosts] = useState([]) 
-
+  
+  const [posts, setPosts] = useState([])
   const currentUser = getCurrentUser();
-  const classes = useStyles();
-
+  
   useEffect(() => {
     const fetchPosts = async () => {
         const posts = await getAllPosts()
@@ -56,46 +38,7 @@ const Profile = () => {
     fetchPosts()
 }, []);
 
-
-    const onChangeTitle = (e) => {
-        const title = e.target.value;
-        setTitle(title);
-      };
-      const onChangeBody = (e) => {
-        const body = e.target.value;
-        setBody(body);
-      };
-
-      const handlePost = (e) => {
-        e.preventDefault();
     
-        setMessage("");
-        setSuccessful(false);
-    
-        form.current.validateAll();
-    
-        if (checkBtn.current.context._errors.length === 0) {
-            UserService.createPost(title, body)
-          .then(
-            (response) => {
-              setMessage(response.data.message);
-              setSuccessful(true);
-            },
-            (error) => {
-              const resMessage =
-                (error.response &&
-                  error.response.data &&
-                  error.response.data.message) ||
-                error.message ||
-                error.toString();
-    
-              setMessage(resMessage);
-              setSuccessful(false);
-            }
-          );
-        }
-      };
-
   return (
     <div className="container">
       <header className="jumbotron">
@@ -115,11 +58,13 @@ const Profile = () => {
         posts.map((post, key) => {
             return (
             <>
+            <div className="list">
             <div key={key}>{post.author}</div>
             <div key={key}>{post.title}</div>
             <div key={key}>{post.body}</div>           
             <strong>Date Posted</strong>
-            <div key={key}>{post.date_created}</div>              
+            <div key={key}>{post.date_created}</div> 
+            </div>             
             </>)
         })
       }

@@ -16,6 +16,16 @@ import axios from "axios";
     });
   }
 
+  const getMyPosts = () => {
+    const current_user = getCurrentUser()
+    const author = current_user.username
+    return axios
+    .get('/api/get/user_posts', {headers: authHeader(), author})
+    .then((response) => {
+      return response.data
+    })
+  }
+
   const createPost = (title, body) => {
     const current_user = getCurrentUser()
     const user_id = current_user.id
@@ -30,8 +40,24 @@ import axios from "axios";
     });      
   
   };
-  
 
+  
+  
+  const updatePost = (title, body) => {
+    const current_user = getCurrentUser()
+    const user_id = current_user.id
+    const author = current_user.username
+    
+
+    return axios.post('/api/post/posttodb', { headers: authHeader(),
+      title,
+      body,
+      user_id,
+      author,
+    
+    });      
+  
+  };
 
   
 /*
@@ -39,7 +65,7 @@ import axios from "axios";
 */
 
 export default {
-  getAllPosts, createPost
+  getAllPosts, createPost, getMyPosts
 }
 
 

@@ -36,10 +36,7 @@ async function getAllPosts(req, res) {
 async function getOnePost(req, res) {
     const post_id = req.query.post_id    
     if(!post_id || post_id === ''){
-        res.status(400).json({    
-            status: 'error',        
-            message: 'Invalid request',
-          });
+        res.status(400).send({ message: 'Invalid request' }) 
     }
     const one_post_query = `SELECT * FROM posts WHERE pid=$1`
     const one_post = await pool.query(one_post_query)
@@ -77,26 +74,18 @@ async function createPost(req, res) {
 }
 
 async function updatePost(req, res) {
-    const values = [req.body.title, req.body.body, req.body.uid, req.body.pid, req.body.username]
-    if(!req.body.title || !req.body.body || !req.body.uid || !req.body.pid || !req.body.username){
-        res.status(400).json({
-            status: 'error',
-            error: 'Title and article fields are required',
-          });
-    }
+    const {title, body, user_id, pid, author}= req.body
+    const values = [title, body, user_id, pid, author]
+    if(!title || !body || !user_id || !pid || !author){
+        res.status(400).send({message: 'Title and article fields are required!'})     
+       }
     const update_post_query = `UPDATE posts SET title= $1, body=$2, user_id=$3, author=$5, date_created=NOW() WHERE pid = $4`
     const update_post = await pool.query(update_post_query, values)    
     const new_post = update_post.rows
     try {
-        res.status(201).json({
-            status: 'success',
-            data: new_post ,
-          });
+        res.send({ message: 'Post updated successfully!' })
     } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            message: 'Failed to save post',
-          });
+        res.status(400).send({message: 'Failed to update post!'})
     }
 }
 
@@ -167,4 +156,31 @@ async function updateLikes(req, res) {
 
     
 }
-module.exports = { getAllPosts,getOnePost, createPost, updatePost, deletePostComment, deletePost, updateLikes}
+
+// Get posts by a given user
+async function getMyPosts(req, res) {    
+    const {author} = req.body
+    const get_posts_query = `SELECT * FROM posts WHERE author=$1 ORDER BY date_created DESC`
+    const get_posts = await pool.query(get_posts_query, [author])
+    const user_posts = get_posts.rows
+
+    
+    const posts = []
+    user_posts.forEach(element => {
+        const {title, body, date_created}=element
+        const values = {title, body, date_created}
+        posts.push(values)
+    })
+
+    try {    
+        res.status(200).send(            
+            posts,
+        )        
+    } catch (error) {
+        res.status(400).send({ message: 'Failed to get user posts' })         
+    }
+
+
+
+}
+module.exports = { getAllPosts,getOnePost, createPost, updatePost, deletePostComment, deletePost, updateLikes, getMyPosts}

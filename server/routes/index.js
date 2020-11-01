@@ -12,7 +12,7 @@ const {verifyToken} = require('../middleware/verifyToken')
 
 
 const {registerUser, loginUser, getUserPosts, getOtherUserPosts, getOtherUserProfile} = require('../controllers/users')
-const {getAllPosts,getOnePost, createPost, updatePost, deletePostComment, deletePost,updateLikes} = require('../controllers/posts')
+const {getAllPosts,getOnePost, createPost, updatePost, deletePostComment, deletePost,updateLikes, getMyPosts} = require('../controllers/posts')
 const {postComment, updateComment, deleteComment, getAllPostComments} = require('../controllers/comments')
 /*
     POSTS ROUTES SECTION
@@ -24,7 +24,8 @@ router.post('/api/post/posttodb', createPost)
 router.put('/api/put/post',verifyToken, updatePost)
 router.delete('/api/delete/postcomments',verifyToken, deletePostComment)
 router.delete('/api/delete/post',verifyToken, deletePost)
-router.put('/api/put/likes',verifyToken, updateLikes);
+router.put('/api/put/likes',verifyToken, updateLikes)
+router.get('/api/get/user_posts', verifyToken, getMyPosts)
 
 //Search Posts
 router.get('/api/get/searchpost',verifyToken, (req, res, next) => {
