@@ -76,7 +76,7 @@ const Home = () => {
 
   const {skills, firstName, headline, profilePic} = data
   const {getAllPosts} = UserService
-  const profilepic= "images/" + profilePic;
+  const epic= "images/" + profilePic;
   const classes = useStyles();
   
   
@@ -220,7 +220,7 @@ const page_change = (page) => {
             <Grid item sm={3} className={classes.media}>
               <CardMedia
                 className={classes.media}
-                image={profilepic}
+                image={epic}
               />
             </Grid>
             {/* Main card title and text */}
