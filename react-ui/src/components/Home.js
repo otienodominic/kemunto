@@ -129,18 +129,15 @@ const Home = () => {
               {
         posts.map((post, key) => {
             return (
-            <>            
-            <div key={key}>{post.author}</div>
-            <h1><div key={key}>{post.title}</div></h1>
+            <>
+            <div key ={key}><i>Posted by: {post.author}</i></div>
+            <h3><div key={key}>{post.title}</div></h3>
             <div key={key}>{post.body}</div>           
             <strong>Date Posted</strong>
-            <div key={key}>{post.date_created}</div> 
-                       
+            <div key={key}>{post.date_created}</div>                        
             </>)
         })
-      }
-
-                </Typography>
+      }      </Typography>
             </CardContent>
         </Card>
       </Grid> 
