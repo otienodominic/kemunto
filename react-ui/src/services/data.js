@@ -1,7 +1,7 @@
 export const data = {
     firstName: "Petronilla", 
     lastName: "Kemunto",
-    headline: "Current Nurse",
+    headline: "Current Practicing Nurse",
     profilePic: "profilepic.png",
     website: "https://kemunto.vercel.app/",
     //github: "http://github.com/kemunto",
