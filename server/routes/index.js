@@ -28,7 +28,7 @@ router.put('/api/put/likes',verifyToken, updateLikes)
 router.get('/api/get/user_posts', verifyToken, getMyPosts)
 
 //Search Posts
-router.get('/api/get/searchpost',verifyToken, (req, res, next) => {
+router.get('/api/get/searchpost', (req, res, next) => {
   search_query = String(req.query.search_query)
   pool.query(`SELECT * FROM posts
               WHERE search_vector @@ to_tsquery($1)`,
