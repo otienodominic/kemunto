@@ -90,7 +90,7 @@ const createPost = () => {
           value={body}
           fullWidth
           multiline 
-          onChange={onChangeBody}    
+          onChange={onChangeBody}           
           required={true}  
           rows={10}           
           margin="normal"
