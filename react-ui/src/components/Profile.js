@@ -1,24 +1,9 @@
 import React, {useState, useEffect, useRef} from "react";
 import AuthService from "../services/auth.service";
 import UserService from '../services/user.service'
-import TextField from '@material-ui/core/TextField'
-import { makeStyles } from '@material-ui/core/styles';
-import Form from "react-validation/build/form";
-import Button from '@material-ui/core/Button'
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
-import CardMedia from '@material-ui/core/CardMedia';
-import Grid from '@material-ui/core/Grid';
-import Textarea from 'react-validation/build/textarea'
 
 import '../App.css'
 
-
-
-
-
-//import Form from '@material-ui/core/form'
-// import Form from '@material-ui/core/form'
 
 const {getCurrentUser} = AuthService
 const {getAllPosts, getMyPosts} = UserService

@@ -11,8 +11,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Icon from '@material-ui/core/Icon';
 import Link from '@material-ui/core/Link';
 
- import UserService from "../services/user.service";
-
+import UserService from '../services/user.service'
 
 const useStyles = makeStyles({
   root: {
@@ -61,18 +60,22 @@ const useStyles = makeStyles({
 });
 
 const Home = () => {
-  const [contents, setContents] = useState([]);
+  const [posts, setPosts] = useState([])
   const {skills, firstName, headline, profilePic} = data
+  const {getAllPosts} = UserService
   const profilepic= "images/" + profilePic;
   const classes = useStyles();
-
+  
+  
+  
   useEffect(() => {
     const fetchPosts = async () => {
-        const contents = await UserService.getAllPosts()
-        setContents( contents )        
+        const posts = await getAllPosts()
+        console.log(posts)
+        setPosts(posts)
     };    
     fetchPosts()
-}, []);
+}, []); 
  
 
   return (
@@ -123,20 +126,19 @@ const Home = () => {
         <Card className={classes.root}>
             <CardContent>
               <Typography variant="body2" gutterBottom>
-              <h1>Journeying with Epilepsy for brains living with epilepsy</h1>
-Living with <strong>epilepsy</strong> taught me the significance of taking care of the brain with or without epilepsy. 
-<br/>
-After many years of working as a general nursing practitioner, I felt passion for training as a nephrology nurse which from 2006 while living with Epilepsy.
-<br/>
-In the process of practising as nephrology/dialysis nurse, self-experience of living with epilepsy and compounded with observing patients convulsing while on dialysis and having suffered several convulsions during my practise as a nephrology nurse, for self-care and care of other persons living with epilepsy, I was triggered to switch to learning more about epilepsy and the brain.
-This led to currying studies on: 
-<br/>
-<ol>
-  <li>EEG in diagnosis and management of Epilepsy</li>
-  <li>Psychiatric aspect of Epilepsy</li>
-  <li>Sleep disorders associated with Epilepsy</li>
-  <li>Counselling Psychology</li>
-</ol>
+              {
+        posts.map((post, key) => {
+            return (
+            <>            
+            <div key={key}>{post.author}</div>
+            <h1><div key={key}>{post.title}</div></h1>
+            <div key={key}>{post.body}</div>           
+            <strong>Date Posted</strong>
+            <div key={key}>{post.date_created}</div> 
+                       
+            </>)
+        })
+      }
 
                 </Typography>
             </CardContent>
@@ -186,3 +188,4 @@ This led to currying studies on:
 };
 
 export default Home;
+

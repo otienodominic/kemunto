@@ -202,6 +202,9 @@ const createPost = () => {
               value={body}
               onChange={onChangeBody}
               required={true}
+              rows={3}
+              floatingLabelText="MultiLine and FloatingLabel"
+              style={{textAlign: 'left'}}
               />
               </div>
            

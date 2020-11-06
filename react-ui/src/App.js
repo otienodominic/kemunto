@@ -10,6 +10,7 @@ import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import CreatePost from "./components/CreatePost"
+import Posts from './components/Posts'
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
@@ -38,6 +39,9 @@ const App = () => {
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <Link to={"/"} className="navbar-brand">
           Kemunto App
+        </Link>
+        <Link to={"/posts"} className="navbar-brand">
+          Posts
         </Link>
         <div className="navbar-nav mr-auto">
           <li className="nav-item">
@@ -108,6 +112,7 @@ const App = () => {
           <Route exact path="/register" component={Register} />
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/create-post" component={CreatePost} />
+          <Route exact path="/posts" component={Posts} />
           {/* <Route path="/user" component={BoardUser} />
           <Route path="/mod" component={BoardModerator} />
           <Route path="/admin" component={BoardAdmin} /> */}
