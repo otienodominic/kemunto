@@ -39,7 +39,7 @@ async function getOnePost(req, res) {
         res.status(400).send({ message: 'Invalid request' }) 
     }
     const one_post_query = `SELECT * FROM posts WHERE pid=$1`
-    const one_post = await pool.query(one_post_query)
+    const one_post = await pool.query(one_post_query,[post_id])
     const single_post = one_post.rows[0]
     if(!single_post){
         res.status(400).json({

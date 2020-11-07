@@ -19,9 +19,9 @@ const {postComment, updateComment, deleteComment, getAllPostComments} = require(
 */
 
 router.get('/api/get/allposts',getAllPosts)
-router.get('/api/get/post',verifyToken, getOnePost)
+router.get('/api/get/post', getOnePost)
 router.post('/api/post/posttodb', createPost)
-router.put('/api/put/post',verifyToken, updatePost)
+router.put('/api/put/post',updatePost)
 router.delete('/api/delete/postcomments',verifyToken, deletePostComment)
 router.delete('/api/delete/post',verifyToken, deletePost)
 router.put('/api/put/likes',verifyToken, updateLikes)
