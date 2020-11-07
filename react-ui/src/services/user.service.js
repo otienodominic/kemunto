@@ -16,6 +16,15 @@ import axios from "axios";
     });
   }
 
+  const getOnePost =(pid)=> {
+    return axios
+    .get('/api/get/post',{pid})
+    .then((response) => { 
+      return response.data      
+    });
+  }
+
+
   const getMyPosts = () => {
     const current_user = getCurrentUser()
     const author = current_user.username
@@ -43,19 +52,19 @@ import axios from "axios";
 
   
   
-  const updatePost = (title, body) => {
+  const editPost = (title, body) => {
     const current_user = getCurrentUser()
     const user_id = current_user.id
     const author = current_user.username
-    
-
-    return axios.post('/api/post/posttodb', { headers: authHeader(),
+    const post = getOnePost()
+    const {pid} = post 
+    return axios.post('/api/put/post', { 
+      pid,
       title,
       body,
       user_id,
-      author,
-    
-    });      
+      author,    
+    });     
   
   };
 
@@ -65,7 +74,7 @@ import axios from "axios";
 */
 
 export default {
-  getAllPosts, createPost, getMyPosts
+  getAllPosts, createPost, getMyPosts, getOnePost, editPost
 }
 
 

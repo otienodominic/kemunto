@@ -61,6 +61,7 @@ const useStyles = makeStyles({
 
 const Home = () => {
   const currentUser = getCurrentUser()
+  const [profPic, setProfPic] = useState(null)
   const [stateLocal, setState] = useState({ posts: [],
     fetched: false,
     first_page_load: false,
@@ -209,8 +210,9 @@ const page_change = (page) => {
  
 
   return (
+    <div>
     
-    <Grid container spacing={5} className={classes.root}>
+    <Grid container spacing={3} className={classes.root}>
 {/* Begin main/profile pic card */}
       <Grid item xs={12}>
         <Card>
@@ -335,8 +337,8 @@ const page_change = (page) => {
           </CardContent>
         </Card>
       </Grid>
-    </Grid> // End container
-  
+    </Grid> 
+    </div>
   );
 };
 

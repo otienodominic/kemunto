@@ -185,7 +185,7 @@ const Posts = (props) => {
               Add Post
             </Button>
           </Link>
-      : <Link to="/signup">
+      : <Link to="/register">
             <Button variant="contained" color="primary">
               Sign Up to Add Post
             </Button>
