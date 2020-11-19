@@ -3,6 +3,7 @@ import { FormControl, Button, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import UserService from '../services/user.service'
 import { Link } from 'react-router-dom';
+import history from '../utils/history'
 
 const useStyles = makeStyles({
   root: {
@@ -36,7 +37,7 @@ const createPost = () => {
     setBody(body);
   };
   const handleSubmit = (event) => {
-    event.preventDefault()    
+    event.preventDefault()      
     setMessage("");
     setSuccessful(false);
       UserService.createPost(title, body).then(
@@ -57,9 +58,8 @@ const createPost = () => {
         }
       )
   }
-
-
     return(   
+      <div>
      <form className={classes.root} onSubmit={handleSubmit}>            
       {!successful &&(
       <div>   
@@ -113,21 +113,12 @@ const createPost = () => {
               </div>
             </div>
           )}
-  </form>     
-    
+  </form>  
+  <br />
+  <button onClick={() => history.replace('/posts')}> Cancel </button>   
+  </div>
   )}
 
 
 export default createPost;
-
-
-// <div className="button">
-//         {/* <button onClick={() => history.replace('/profile')}> Cancel </button> */}
-
-//         <Link to="/profile">
-//                  <Button variant="contained" color="white">
-//                    Back to Profile
-//                  </Button>
-//                </Link>
-// </div>
 

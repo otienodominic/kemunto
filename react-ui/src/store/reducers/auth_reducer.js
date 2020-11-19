@@ -1,44 +1,58 @@
-import * as ACTION_TYPES from '../actions/action_types'
+export const initialState = null
 
-export const initialState = {
-  is_authenticated: false,
-  db_profile: null,
-  profile: null,
-}
-
-export const AuthReducer = (state = initialState, action) => {
-    switch(action.type) {
-      case ACTION_TYPES.LOGIN_SUCCESS:
-        return {
-          ...state,
-          is_authenticated: true
-        }
-      case ACTION_TYPES.LOGIN_FAILURE:
-        return {
-          ...state,
-          is_authenticated: false
-        }
-        case ACTION_TYPES.ADD_PROFILE:
-          return {
-            ...state,
-            profile: action.payload
-          }
-        case ACTION_TYPES.REMOVE_PROFILE:
-          return {
-            ...state,
-            profile: null
-          }
-        case ACTION_TYPES.SET_DB_PROFILE:
-          return {
-            ...state,
-            db_profile: action.payload
-          }
-        case ACTION_TYPES.REMOVE_DB_PROFILE:
-          return {
-            ...state,
-            db_profile: null
-          }
-      default:
-        return state
+export const AuthReducer=(state, action)=>{
+  if(action.type==="USER"){
+    return action.payload
+  }
+  if(action.type==="CLEAR"){
+    return null
+  }
+  if(action.type==="UPDATE"){
+    return {
+      ...state,
+      db_profile: action.payload
     }
+  }
+  return state
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// export const AuthReducer = (state, action) => {
+//     switch(action.type) {
+//       case ACTION_TYPES.USER:
+//         return {
+//           payload: action.payload
+//         }
+//       case ACTION_TYPES.CLEAR:
+//         return null
+//         case ACTION_TYPES.UPDATE:
+//           return {
+//             ...state,
+//             followers:action.payload.followers,
+//             following:action.payload.following
+//           }
+//         case ACTION_TYPES.UPDATEPIC:
+//           return {
+//             ...state,
+//             pic:action.payload
+//           }        
+//       default:
+//         return state
+//     }
+// }

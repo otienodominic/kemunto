@@ -177,40 +177,26 @@ const Posts = (props) => {
 
     return (
         <div>
-          <div style={{opacity: stateLocal.opacity, transition: 'opacity 2s ease'}}>
-    <br />
-    { currentUser
-      ?  <Link to="/addpost">
-            <Button variant="contained" color="primary">
-              Add Post
-            </Button>
-          </Link>
-      : <Link to="/register">
-            <Button variant="contained" color="primary">
-              Sign Up to Add Post
-            </Button>
-          </Link>
-        }
+          <div style={{opacity: stateLocal.opacity, transition: 'opacity 2s ease'}}>    
+    
     </div>
     <br />
-    <TextField
+    {/* <TextField
       id="search"
       label="Search"
       margin="normal"
       onChange={handleSearch}
     />
-    <hr />
-     <button onClick={() => console.log(stateLocal)}> Button </button>
-     <button onClick={() => console.log(currentUser)}> Button </button>
-     <br />
-     <div>
+    <hr /> */}
+     
+     {/* <div>
        {stateLocal.posts_search
          ? stateLocal.posts_search.map(post =>
            <RenderPosts key={post.pid + 1000} post={post} />
           )
           : null
         }
-      </div>
+      </div> */}
 
     <h1>Posts</h1>
       <div>

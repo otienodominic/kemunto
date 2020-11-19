@@ -1,4 +1,4 @@
-import React, { useState, useRef }  from 'react';
+import React, { useState, useRef, useEffect }  from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import history from '../utils/history'
 import AuthService from "../services/auth.service";
 
 function Copyright() {
@@ -168,7 +169,7 @@ export default function SignUp() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="/login" variant="body2">
+              <Link href="/signin" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
@@ -179,10 +180,11 @@ export default function SignUp() {
         {message && (
             <div className="form-group">
               <div
-                className={ successful ? "alert alert-success" : "alert alert-danger" }
+                className={ successful ? "alert alert-success" : "alert alert-danger" }                
                 role="alert"
               >
                 {message}
+                
               </div>
             </div>
           )}

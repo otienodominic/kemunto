@@ -62,29 +62,30 @@ async function loginUser(req, res) {
       }
       const find_user_query = `SELECT * FROM users WHERE email=$1`
       const find_user = await pool.query(find_user_query, [email]) 
-      const User = find_user.rows[0]
+      // const User = find_user.rows[0]
       // const {uid, username, userMail: email, hashedPassword: password} = find_user
       //const verifyPwd  = await Helper.comparePassword(password.trim(), hashedPassword)
 
-      const verifyPwd = bcrypt.compareSync( password, User.password);      
+      const verifyPwd = bcrypt.compareSync( password, find_user.rows[0].password);      
 
       if (!verifyPwd) {
         res.status(400).send({ message: 'email or password is incorrect!' })        
       }
       const userObj = {
-        sub: User.uid,
-        username: User.username
+        sub: find_user.rows[0].uid,
+        username: find_user.rows[0].username
       }
       
       const token = jwt.sign({ userObj }, JWT_SECRET);
 
       try {
-        res.status(200).send({
-            id: User.uid,
-            username: User.username,
-            email: User.email,            
+        res.status(200).send([{
+            id: find_user.rows[0].uid,
+            username: find_user.rows[0].username,
+            email: find_user.rows[0].email, 
+            email_verified: find_user.rows[0].email_verified,           
             accessToken: token
-          });
+          }]);
       } catch (error) {
         res.status(400).send({ message: 'Failed to get user' })
         

@@ -1,71 +1,71 @@
-import * as ACTION_TYPES from './action_types'
+// import * as ACTION_TYPES from './action_types'
 
-export const set_db_profile = (profile) => {
-    return {
-      type: ACTION_TYPES.SET_DB_PROFILE,
-      payload: profile
-    }
-  }
+// export const set_db_profile = (profile) => {
+//     return {
+//       type: ACTION_TYPES.SET_DB_PROFILE,
+//       payload: profile
+//     }
+//   }
   
-  export const remove_db_profile = () => {
-    return {
-      type: ACTION_TYPES.REMOVE_DB_PROFILE
-    }
-  }
+//   export const remove_db_profile = () => {
+//     return {
+//       type: ACTION_TYPES.REMOVE_DB_PROFILE
+//     }
+//   }
   
-  export const set_db_posts = (posts) => {
-    return {
-      type: ACTION_TYPES.FETCH_DB_POSTS,
-      payload: posts
-    }
-  }
+//   export const set_db_posts = (posts) => {
+//     return {
+//       type: ACTION_TYPES.FETCH_DB_POSTS,
+//       payload: posts
+//     }
+//   }
   
-  export const remove_db_posts = () => {
-    return {
-      type: ACTION_TYPES.REMOVE_DB_POSTS
-    }
-  }
+//   export const remove_db_posts = () => {
+//     return {
+//       type: ACTION_TYPES.REMOVE_DB_POSTS
+//     }
+//   }
 
-  export const add_profile = () => {
-    return {
-      type: ACTION_TYPES.ADD_PROFILE
-    }
-  }
-  export const failure = () => {
-    return {
-      type: ACTION_TYPES.FAILURE
-    }
-  }
-  export const login_failure = () => {
-    return {
-      type: ACTION_TYPES.LOGIN_FAILURE
-    }
-  }
+//   export const add_profile = () => {
+//     return {
+//       type: ACTION_TYPES.ADD_PROFILE
+//     }
+//   }
+//   export const failure = () => {
+//     return {
+//       type: ACTION_TYPES.FAILURE
+//     }
+//   }
+//   export const login_failure = () => {
+//     return {
+//       type: ACTION_TYPES.LOGIN_FAILURE
+//     }
+//   }
 
-  export const login_success = () => {
-    return {
-      type: ACTION_TYPES.LOGIN_SUCCESS
-    }
-  }
-  export const remove_profile = () => {
-    return {
-      type: ACTION_TYPES.REMOVE_PROFILE
-    }
-  }
+//   export const login_success = () => {
+//     return {
+//       type: ACTION_TYPES.LOGIN_SUCCESS
+//     }
+//   }
+//   export const remove_profile = () => {
+//     return {
+//       type: ACTION_TYPES.REMOVE_PROFILE
+//     }
+//   }
 
-  export const success = () => {
-    return {
-      type: ACTION_TYPES.SUCCESS
-    }
-  }
+//   export const success = () => {
+//     return {
+//       type: ACTION_TYPES.SUCCESS
+//     }
+//   }
 
-  export const user_input_change = () => {
-    return {
-      type: ACTION_TYPES.USER_INPUT_CHANGE
-    }
-  }
-  export const user_input_submit = () => {
-    return {
-      type: ACTION_TYPES.USER_INPUT_SUBMIT
-    }
-  }
+//   export const user_input_change = () => {
+//     return {
+//       type: ACTION_TYPES.USER_INPUT_CHANGE
+//     }
+//   }
+//   export const user_input_submit = () => {
+//     return {
+//       type: ACTION_TYPES.USER_INPUT_SUBMIT
+//     }
+//   }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import history from '../utils/history'
+import Context from '../utils/context'
 
 
 import AuthService from "../services/auth.service";
@@ -50,11 +52,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn(props) {
-  const classes = useStyles();
-  const form = useRef();
-  const checkBtn = useRef();    
-  
+export default function SignIn() {
+  const {state, dispatch} = useContext(Context)
+  const classes = useStyles(); 
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -70,19 +70,23 @@ export default function SignIn(props) {
     const password = e.target.value;
     setPassword(password);
   };
+  
 
-  const handleLogin = (e) => {
+  const handleLogin = (e)=>{
     e.preventDefault();
-
     setMessage("");
     setLoading(true); 
-    login(email, password).then(
-        () => {
-          props.history.push("/profile");
-          window.location.reload();
-        },
-        (error) => {
-          const resMessage =
+    login(email, password).then(data =>{
+      console.log(data[0].id)
+      //localStorage.setItem('x-access-token', data.accessToken)
+      localStorage.setItem('user', JSON.stringify(data[0]))
+      localStorage.setItem('uid', data[0].id)
+      localStorage.setItem('accessToken', data[0].accessToken)
+      
+      dispatch({type:'USER', payload:data[0]})
+      history.push('/profile')
+    }).catch(error =>{
+      const resMessage =
             (error.response &&
               error.response.data &&
               error.response.data.message) ||
@@ -91,11 +95,8 @@ export default function SignIn(props) {
 
           setLoading(false);
           setMessage(resMessage);
-        }
-      );
-    
-  };
-
+    })
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -155,7 +156,7 @@ export default function SignIn(props) {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/register" variant="body2">
+              <Link href="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
