@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-
-const { DATABASE_URL} = require('../config')
+const jwt = require('jsonwebtoken')
+const { DATABASE_URL, JWT_SECRET} = require('../config')
 const {Pool} = require('pg')
 
 const pool = new Pool({
@@ -128,8 +128,8 @@ router.get('/api/get/allpostcomments', (req, res, next) => {
   USER PROFILE SECTION
 */
 
-router.post('/api/posts/userprofiletodb',registerUser)  
-router.post('/api/get/userprofilefromdb', loginUser )
+router.post('/api/auth/register',registerUser)  
+router.post('/api/auth/login', loginUser )
 
 // router.post('/api/posts/userprofiletodb', (req, res, next) => {
   
@@ -161,7 +161,6 @@ router.get('/api/get/userposts', (req, res, next) => {
                 res.json(q_res.rows)
       })
 } )
-
 
 router.put('/api/put/likes', (req, res, next) => {
   const uid = [req.body.uid]
@@ -199,7 +198,7 @@ router.post('/api/post/posttodb', (req, res, next) => {
   const username_vector = String(req.body.username)
 
   const search_vector = [title_vector, body_vector, username_vector]
-  const values = [req.body.title, req.body.body, search_vector, req.body.uid, req.body.username]
+  const values = [req.body.title, req.body.body, search_vector, req.body.user_id, req.body.author]
   pool.query(`INSERT INTO
               posts(title, body, search_vector, user_id, author, date_created)
               VALUES($1, $2, to_tsvector($3), $4, $5, NOW())`,

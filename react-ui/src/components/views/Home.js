@@ -1,17 +1,19 @@
-import {data, contactItems, blogPosts} from '../services/data'
-import React, { useState, useEffect } from "react";
+import {data, contactItems, blogPosts} from '../../data'
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import {Button, TextField, Card, CardContent, CardHeader, CardMedia, Typography, Grid, CardActions, Icon, Link} from '@material-ui/core'
 import moment from 'moment'
 import axios from 'axios'
 
-import AuthService from "../services/auth.service";
-import UserService from '../services/user.service'
+import {Context} from "../../utils/context";
 
-import '../App.css'
-import '../styles/pagination.css';
+// import AuthService from "../services/auth.service";
+// import UserService from '../services/user.service'
 
-const {getCurrentUser} = AuthService
+// import '../App.css'
+import '../../styles/pagination.css';
+
+//const {getCurrentUser} = AuthService
 
 const useStyles = makeStyles({
   root: {
@@ -60,7 +62,8 @@ const useStyles = makeStyles({
 });
 
 const Home = () => {
-  const currentUser = getCurrentUser()
+  
+  const {userData, setUserData} = useContext(Context);
   const [profPic, setProfPic] = useState(null)
   const [stateLocal, setState] = useState({ posts: [],
     fetched: false,
@@ -76,15 +79,16 @@ const Home = () => {
 })
 
   const {skills, firstName, headline, profilePic} = data
-  const {getAllPosts} = UserService
-  const epic= "images/" + profilePic;
-  const classes = useStyles();
   
+
+  const epic= "images/" + profilePic;
+  const classes = useStyles();  
   
   
   useEffect(() => {
     const fetchPosts = async () => {
-        const posts = await getAllPosts()
+        const all_posts = await axios.get('/api/get/allposts')
+        const posts = all_posts.data
         const indexOfLastPost = 1 * stateLocal.posts_per_page
         const indexOfFirstPost = indexOfLastPost - stateLocal.posts_per_page
         const last_page = Math.ceil(posts.length/stateLocal.posts_per_page)
@@ -343,4 +347,3 @@ const page_change = (page) => {
 };
 
 export default Home;
-

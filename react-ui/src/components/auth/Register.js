@@ -12,8 +12,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import history from '../utils/history'
-import AuthService from "../services/auth.service";
+//import history from '../utils/history'
+
+import axios from 'axios'
 
 function Copyright() {
   return (
@@ -79,7 +80,9 @@ export default function SignUp() {
     event.preventDefault()    
     setMessage("");
     setSuccessful(false);
-    AuthService.register(username, email, password).then(
+    const url = '/api/auth/register'
+    axios.post(url, {username, email, password})
+    .then(
         (response) => {
           setMessage(response.data.message);
           setSuccessful(true);
@@ -169,7 +172,7 @@ export default function SignUp() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="/signin" variant="body2">
+              <Link href="/login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>

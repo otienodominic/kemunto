@@ -1,85 +1,51 @@
-import React, { useEffect, useReducer, useContext } from "react";
-import history from './utils/history'
-import Context from './utils/context';
-import {Route, Link, BrowserRouter } from "react-router-dom";
-import {Switch} from 'react-router'
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
+import {Context} from "./utils/context";
 
-// Reducers
-import {AuthReducer, initialState}  from './store/reducers/auth_reducer';
+// import "./style.css";
 
-// Components
-import Header from "./components/Header"
-import Profile from './components/Profile'
-import SignUp from './components/SignUp'
-import SignIn from './components/SignIn'
-import CreatePost from './components/CreatePost'
-import Home from './components/Home'
-import Posts from './components/Posts'
+// Components 
+// import Header from './components/views/Header' 
+// import Home from './components/views/Home'
+import Login from './components/auth/Login'
+import Register from './components/auth/Register'
+// import Profile from './components/views/Profile'
+import Dashboard from './components/dashboard/index'
+import Home from './components/home'
 
-// Context
- //export const userContext = createContext()
+export default function App() {
+  const [userData, setUserData] = useState({ user: undefined,});
 
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      let User = localStorage.getItem("user");
+      console.log(User)
+      if (!User) {
+        localStorage.setItem("user", "");
+        User = "";
+      }else{
+        setUserData(User);
+      }
+    };
+    checkLoggedIn();
+  }, []);
 
-const Routing =()=>{
-
-  const {state, dispatch} = useContext(Context)
-  useEffect(()=> {
-    //const user = context.data[0].uid
-  const user = JSON.parse(JSON.stringify(localStorage.getItem('user')))
-    if(user){
-      dispatch({type:'USER', payload:user})
-    }else{
-      if(!history.location.pathname.startsWith('/reset'))
-          history.push('/')
-    }
-  },[])
-
-  return(
-   <div>
-     <Header />
-     <div>
-      <Switch>
-        <Route exact path='/signin' component={SignIn}>
-          <SignIn />
-        </Route>
-        <Route exact path='/signup' component={SignUp}>
-          <SignUp />
-        </Route>
-        <Route exact path='/profile' component={Profile}>
-          <Profile />
-        </Route>
-        <Route exact path='/create_post' component={CreatePost}>
-          <CreatePost />
-        </Route>
-        <Route exact path='/' component={Home}>
-          <Home /> 
-        </Route>
-        <Route exact path='/posts' component={Posts}>
-          <Posts />
-        </Route>
-
-      </Switch> 
-     </div>
-   </div>
- )
-}
-
-
-
-const App = () => {  
-  const [state, dispatch]= useReducer(AuthReducer, initialState)
-  return(
-    <div>
-    <Context.Provider value={{state, dispatch}}>  
+  return (
+    <>
       <BrowserRouter>
-        <Routing /> 
-      </BrowserRouter>      
-    </Context.Provider>
-  </div>
-  )
-};
-
-export default App;
+        <Context.Provider value={{ userData, setUserData }}>
+         
+          <div className="container">
+            <Switch>
+              <Route exact path="/"  component={Home} />
+              <Route path="/login" component={Login} />
+              <Route path="/register" component={Register} />              
+              <Route path="/dashboard" component={Dashboard} />
+            </Switch>
+          </div>
+        </Context.Provider>
+      </BrowserRouter>
+    </>
+  );
+}

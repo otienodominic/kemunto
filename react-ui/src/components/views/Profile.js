@@ -1,9 +1,11 @@
+  
 import React, { useContext, useState, useEffect } from 'react';
-import Context from '../../utils/context';
+import { Link, useHistory } from 'react-router-dom';
+import moment from 'moment'
 
-import { Link } from 'react-router-dom';
-import history from '../../utils/history';
 import axios from 'axios';
+
+import {Context} from "../../utils/context";
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -17,23 +19,27 @@ import Button from '@material-ui/core/Button';
 
 
 const Profile = () => {
-  const {state, dispatch} = useContext(Context)
+  //const context = useContext(Context)
+  const history = useHistory()
+  const { userData } = useContext(Context);
 
   const [stateLocal, setState] = useState({ open: false,
                                             post_id: null,
                                             posts: []
                                           })
-  useEffect(() => {        
-    const user_id = JSON.parse(JSON.stringify(localStorage.getItem("uid")))    
-    axios.get('/api/get/userposts', {params: { user_id: user_id}})
-      .then((res) => setState({...stateLocal, posts: [...res.data] }))
-      .catch((err) => console.log(err))
-  })
+  useEffect(() => {
+    const fetchPosts = async () => {
+        const user_id = userData.id
+        const all_posts = await axios.get('/api/get/userposts', {params: user_id})
+        const posts = all_posts.data
+        setState({...stateLocal,            
+            posts: [...posts],            
+            })
+  }            
+    fetchPosts()
+}, []); 
 
-  const user = JSON.parse(JSON.stringify(localStorage.getItem("user")))
-  const user_iid = JSON.parse(JSON.stringify(localStorage.getItem("uid")))
-
-  const handleClickOpen = (pid) => {
+const handleClickOpen = (pid) => {
     setState({open: true, post_id: pid })
   }
 
@@ -54,22 +60,26 @@ const Profile = () => {
   const RenderProfile = () => {
     return(
       <div>
-        <h1>{state?user.username:"loading"}</h1>
-        <br />        
-        <h4> {state? user.email: 'loading'}</h4>
+        <h1>{userData.username}</h1>
         <br />
-        <h5> {state?user.last_login: 'loading'} </h5>
+        {/* <img src={props.profile.profile.picture} alt="" /> */}
+        <br />
+        <h4> {userData.email}</h4>
+        <br />
+        <h5> {userData.username} </h5>
         <br />
         <h6> Email Verified: </h6>
-        {user.email_verified ? <p>Yes</p> : <p>No</p> }
+        {userData.email_verified ? <p>Yes</p> : <p>No</p> }
         <br />
       </div>
 
      )
    }
+  
 
-  const RenderPosts = post => (
-    <Card style={{width: '500px', height: '200px', marginBottom: '10px', paddingBottom: '80px' }}>
+   const RenderPosts = post => (
+    <div >
+    <Card >  
       <CardHeader
         title={<Link to={{pathname:'/post/' + post.post.pid, state: {post}}}>
                   {post.post.title}
@@ -77,17 +87,18 @@ const Profile = () => {
         subheader={
             <div className="FlexColumn">
               <div className="FlexRow">
-                {post.post.date_created}
+              {  moment(post.post.date_created).format('MMMM Do, YYYY | h:mm:s a') }
               </div>
               <div className="FlexRow">
-                <Link to={{pathname:'/editpost/' + post.post.pid, state:{post} }}>
-                  <button>
-                   Edit
-                  </button>
-                </Link>
-                <button onClick={() => handleClickOpen(post.post.pid) }>
-                 Delete
-                </button>
+                Posted By:
+                <Link style={{paddingLeft: '5px', textDecoration: 'none'}}
+                      to={{pathname:"/user/" + post.post.author, state:{post} }}>
+                 { post.post.author }
+                 </Link>
+               </div>
+               <div className="FlexRow">
+                {/* <i className="material-icons">thumb_up</i> */}
+                <div className="notification-num-allposts"> {post.post.likes} </div>
               </div>
             </div>
             }
@@ -96,26 +107,29 @@ const Profile = () => {
       <CardContent>
         <span style={{overflow: 'hidden' }}> {post.post.body} </span>
       </CardContent>
-
     </Card>
-  );
+    </div>
+  )
 
-
-      return(
+ return(
           <div>
             <div>
-            <Link to={{pathname:"/showmessages/" + user_iid }}>
+            <Link to={{pathname:"/showmessages/" + userData.id }}>
              <Button variant="contained" color="primary" type="submit">
                Show Messages
               </Button>
             </Link>
-            <RenderProfile profile={user} />
+            {RenderProfile}
             </div>
-            <div>
-              {stateLocal.posts
-                ? stateLocal.posts.map(post =>
-                  <RenderPosts post={post} key={post.pid} /> )
-                : null }
+            <div>             
+
+                {
+                    stateLocal.posts_slice
+                    ? stateLocal.posts_slice.map(post =>
+                      <RenderPosts key={post.pid} post={post} />
+                     )
+                    : null
+                }
             </div>
             <Dialog
               open={stateLocal.open}

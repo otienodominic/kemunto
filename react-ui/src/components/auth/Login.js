@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useContext } from "react";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,12 +12,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import history from '../utils/history'
-import Context from '../utils/context'
+import { useHistory } from "react-router-dom";
 
+import {Context} from '../../utils/context'
 
-import AuthService from "../services/auth.service";
-const{login} = AuthService
+import axios from 'axios'
 
 function Copyright() {
   return (
@@ -52,10 +51,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
-  const {state, dispatch} = useContext(Context)
+export default function Login() {
+  //const {state, dispatch} = useContext(Context)  
   const classes = useStyles(); 
+  const { setUserData } = useContext(Context);
+  const history = useHistory();
 
+  // const [user, setUser] = useState(null)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -75,16 +77,16 @@ export default function SignIn() {
   const handleLogin = (e)=>{
     e.preventDefault();
     setMessage("");
-    setLoading(true); 
-    login(email, password).then(data =>{
-      console.log(data[0].id)
-      //localStorage.setItem('x-access-token', data.accessToken)
-      localStorage.setItem('user', JSON.stringify(data[0]))
-      localStorage.setItem('uid', data[0].id)
-      localStorage.setItem('accessToken', data[0].accessToken)
-      
-      dispatch({type:'USER', payload:data[0]})
-      history.push('/profile')
+    setLoading(true);
+
+    const url = '/api/auth/login'    
+    axios.post(url, {email, password})
+    .then(data =>{
+      setUserData(data.data[0])   
+      // localStorage.setItem('user', data.data[0]) 
+      localStorage.setItem('user', data.data[0])  
+      history.push('/dashboard')
+
     }).catch(error =>{
       const resMessage =
             (error.response &&
@@ -97,6 +99,9 @@ export default function SignIn() {
           setMessage(resMessage);
     })
   }
+
+  // if (user) return <Redirect to="/home" />
+  //else if (!user) return <Redirect to="/login" />
 
   return (
     <Container component="main" maxWidth="xs">
@@ -156,7 +161,7 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/signup" variant="body2">
+              <Link href="/register" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
