@@ -6,7 +6,8 @@ import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Navigator from './Navigator';
-import Content from './Content';
+// import Content from './Content';
+import Content from './createpost'
 import Header from './Header';
 
 function Copyright() {

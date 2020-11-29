@@ -44,8 +44,8 @@ router.get('/api/get/post', (req, res, next) => {
 //     })
 // })
 
-router.put('/api/put/post', (req, res, next) => {
-  const values = [req.body.title, req.body.body, req.body.uid, req.body.pid, req.body.username]
+router.put('/api/post/posttodb/:pid', (req, res, next) => {
+  const values = [req.body.title, req.body.body, req.body.user_id, req.body.pid, req.body.author]  
   pool.query(`UPDATE posts SET title= $1, body=$2, user_id=$3, author=$5, date_created=NOW()
               WHERE pid = $4`, values,
               (q_err, q_res) => {
@@ -219,6 +219,18 @@ router.get('/api/get/otheruserprofilefromdb', (req, res, next) => {
     res.json(q_res.rows)
   });
 });
+
+router.get('/search-users', (req, res, next) => {
+   const email = [ "%" + req.query.email + "%"]
+  // let userPattern = new RegExp("^"+req.body.query)
+  // const email = userPattern  
+  pool.query(`SELECT * FROM users WHERE email = $1`,
+    [ email ], (q_err, q_res) => {
+    res.json(q_res.rows)
+  });
+});
+
+
 
 //Get another user's posts based on username
 router.get('/api/get/otheruserposts', (req, res, next) => {

@@ -1,61 +1,47 @@
-body {
-  background: linear-gradient(#cbe4f4, #f4d2c6, #93acc9, #f0c9c9, #bbd1df );
-  background-image: url("./images/background.png");
-}
-
-code {
-  font-family: Consolas, 'Courier New', Menlo, source-code-pro, Monaco,  
-    monospace;
-  background: #dbe9f1;
-  padding: 2px;
-}
-
-strong {
-  color: #0a3f5e;
-}
-
-a:hover {
-  color: #6b4c41;
-}
-.background {
-  background-image: url("./images/background.png");
-  
-}
-.card col-md-12 {
-  width: 50%;
-  padding: 0 40px;
+html, body {
+  height: 100vh;
+  background-color: darkgray;
+  overflow: hidden;
   display: flex;
- 
+  flex-direction: column;
 }
-.Login {
+
+.App, #root {
+  text-align: center;
+  height: 100vh;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid lightgray;
-  padding: 50px;
-}
-.Register {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid lightgray;
-  padding: 50px;
-}
-label {
-  display: block;
-  margin-top: 10px;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 
-.card-container.card {
-  max-width: 350px !important;
-  padding: 40px 40px;
-  background-color: #93acc9;
-  display: flex;
-}
-.list{
-  border: 1px solid rebeccapurple;
+.App-link {
+  color: #61dafb;
 }
 
-
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

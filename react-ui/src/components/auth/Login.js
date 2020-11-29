@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
   //const {state, dispatch} = useContext(Context)  
   const classes = useStyles(); 
-  const { setUserData } = useContext(Context);
+  const { userData, setUserData } = useContext(Context);
   const history = useHistory();
 
   // const [user, setUser] = useState(null)
@@ -82,10 +82,9 @@ export default function Login() {
     const url = '/api/auth/login'    
     axios.post(url, {email, password})
     .then(data =>{
-      setUserData(data.data[0])   
-      // localStorage.setItem('user', data.data[0]) 
-      localStorage.setItem('user', data.data[0])  
-      history.push('/dashboard')
+        console.log(data.data[0])        
+        setUserData(data.data[0])      
+      history.push('/posts')
 
     }).catch(error =>{
       const resMessage =
