@@ -9,7 +9,7 @@ import AuthState from './context/authContext/authState'
 import PostState from './context/postContext/postState'
 import setAuthToken from './utils/setAuthToken';
 import PrivateRoute from './components/routing/PrivateRoute';
-import Home from './components/Home'
+import Home from './components/Home/index'
 // import UpdateFile from './components/Files/UpdateFile'
 
 if (localStorage.token) {
