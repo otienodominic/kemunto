@@ -1,35 +1,32 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect }  from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
+import {Link} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { useHistory } from "react-router-dom";
 
-import {Context} from '../../utils/context'
-
-import axios from 'axios'
+import AuthContext from '../../context/authContext/authContext'
 
 function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Health Check App
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+    return (
+      <Typography variant="body2" color="textSecondary" align="center">
+        {'Copyright © '}
+        <Link color="inherit" to="https://knh.or.ke/">
+          Patient Appointment and File Management
+        </Link>{' '}
+        {new Date().getFullYear()}
+        {'.'}
+      </Typography>
+    );
+  }
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -51,56 +48,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
-  //const {state, dispatch} = useContext(Context)  
-  const classes = useStyles(); 
-  const { userData, setUserData } = useContext(Context);
-  const history = useHistory();
-
-  // const [user, setUser] = useState(null)
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-
-  const onChangeEmail = (e) => {
-    const email = e.target.value;
-    setEmail(email);
-  };
-
-  const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
-  };
-  
-
-  const handleLogin = (e)=>{
-    e.preventDefault();
-    setMessage("");
-    setLoading(true);
-
-    const url = '/api/auth/login'    
-    axios.post(url, {email, password})
-    .then(data =>{
-        console.log(data.data[0])        
-        setUserData(data.data[0])      
-      history.push('/posts')
-
-    }).catch(error =>{
-      const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          setLoading(false);
-          setMessage(resMessage);
+export default function Login(props) {
+  const classes = useStyles();
+  const { login, isAuthencated, error, clearErrors, loadUser } = useContext(AuthContext)
+  useEffect(() => {
+    if (isAuthencated) {
+      props.history.push('/')
+      clearErrors()
+    } else {
+      clearErrors()
+    }
+    // eslint-disable-next-line
+  }, [isAuthencated, props.history])
+  const [user, setUser] = useState({
+    email: '',
+    password: ''
+  })
+  const { email, password } = user
+  const onchange = e => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value
     })
+    if (error !== null) { clearErrors() }
   }
-
-  // if (user) return <Redirect to="/home" />
-  //else if (!user) return <Redirect to="/login" />
+  const onsubmit = e => {
+    e.preventDefault()
+    login({
+      email,
+      password
+    })
+    clearErrors()
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -110,9 +89,9 @@ export default function Login() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Login
         </Typography>
-        <form className={classes.form} onSubmit={handleLogin}>            
+        <form className={classes.form} onSubmit={onsubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -123,8 +102,8 @@ export default function Login() {
             name="email"
             autoComplete="email"
             autoFocus
-            value={email}
-            onChange={onChangeEmail}
+            value={email} 
+            onChange={onchange}
           />
           <TextField
             variant="outlined"
@@ -136,8 +115,8 @@ export default function Login() {
             type="password"
             id="password"
             autoComplete="current-password"
-            value={password}
-            onChange={onChangePassword}
+            value={password} 
+            onChange={onchange}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -149,29 +128,22 @@ export default function Login() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            disabled={loading}
+            value='Login'
           >
-            Sign In
+            Login
           </Button>
           <Grid container>
-            <Grid item xs>
+            {/* <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>
-            </Grid>
+            </Grid> */}
             <Grid item>
-              <Link href="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link to='/register' variant="body2">
+                {"Don't have an account? Register"}
               </Link>
             </Grid>
           </Grid>
-          {message && (
-            <div className="form-group">
-              <div className="alert alert-danger" role="alert">
-                {message}
-              </div>
-            </div>
-          )}
         </form>
       </div>
       <Box mt={8}>

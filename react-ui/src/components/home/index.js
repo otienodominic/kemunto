@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -8,15 +8,16 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import { Card, CardContent, CardHeader, Typography, Grid, Link} from '@material-ui/core'
 import moment from 'moment'
-
+import PostContext from '../../context/postContext/postContext'
 import '../../styles/pagination.css'
 
-import Header from './Header';
+// import Header from './Header';
 import MainFeaturedPost from './MainFeaturedPost';
 import FeaturedPost from './FeaturedPost';
-import Main from './Main';
+import Main from './PostItem';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
+import PostList from './PostList'
 
 
 import axios from 'axios'
@@ -27,13 +28,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const sections = [
-  { title: 'Home', url: '#' },
-  { title: 'Gallery', url: '#' },
-  { title: 'Contact Me', url: '#' },
-  { title: 'My Story', url: '#' },
-  
-];
 
 const mainFeaturedPost = {
   title: 'Epilepsy Quotes',
@@ -84,47 +78,8 @@ const sidebar = {
 };
 
 export default function Blog() {
+ const {posts, getPosts} = useContext(PostContext)
   const classes = useStyles();
-  const [stateLocal, setState] = useState({ posts: [],
-    fetched: false,
-    first_page_load: false,
-    pages_slice: [1, 2, 3, 4, 5],
-    max_page: null,
-    items_per_page: 3,
-
-    currentPage: 1,
-    num_posts: null,
-    posts_slice: null,    
-    posts_per_page: 3
-})
-
-useEffect(() => {
-  const fetchPosts = async () => {
-      const all_posts = await axios.get('/api/get/allposts')
-      const posts = all_posts.data
-      const indexOfLastPost = 1 * stateLocal.posts_per_page
-      const indexOfFirstPost = indexOfLastPost - stateLocal.posts_per_page
-      const last_page = Math.ceil(posts.length/stateLocal.posts_per_page)
-      setState({...stateLocal,
-          fetched: true,
-          posts: [...posts],
-          num_posts: posts.lengthh,
-          max_page: last_page,
-          posts_slice: posts.slice(indexOfFirstPost,
-                                                indexOfLastPost)
-          })
-}            
-  fetchPosts()
-}, []); 
-useEffect(() => {
-  let page = stateLocal.currentPage
-  let indexOfLastPost = page * 3;
-  let indexOfFirstPost = indexOfLastPost - 3;
-
-  setState({...stateLocal,
-            posts_slice: stateLocal.posts.slice(indexOfFirstPost,
-                                                indexOfLastPost) })
-}, [stateLocal.currentPage])
 
 const RenderPosts = post => (
   <div >
@@ -160,74 +115,11 @@ const RenderPosts = post => (
   </div>
 )
 
-const page_change = (page) => {
-  window.scrollTo({top:0, left: 0, behavior: 'smooth'})
-
-  //variables for page change
-  let next_page = page + 1
-  let prev_page = page - 1
-
-  //handles general page change
-  //if(state.max_page < 5 return null)
-  if(page > 2 && page < stateLocal.max_page - 1) {
-    setState({...stateLocal,
-              currentPage: page,
-              pages_slice: [prev_page - 1,
-                            prev_page,
-                            page,
-                            next_page,
-                            next_page + 1],
-            })
-   }
-   if(page === 2 ) {
-     setState({...stateLocal,
-              currentPage: page,
-               pages_slice: [prev_page,
-                             page,
-                             next_page,
-                             next_page + 1,
-                             next_page + 2],
-             })
-    }
-   //handles use case for user to go back to first page from another page
-   if(page === 1) {
-     setState({...stateLocal,
-              currentPage: page,
-               pages_slice: [page,
-                             next_page,
-                             next_page + 1,
-                             next_page + 2,
-                             next_page + 3],
-          })
-   }
-   //handles last page change
-   if(page === stateLocal.max_page) {
-     setState({...stateLocal,
-               currentPage: page,
-               pages_slice: [prev_page - 3,
-                             prev_page - 2,
-                             prev_page - 1,
-                             prev_page,
-                             page],
-             })
-   }
-   if(page === stateLocal.max_page - 1) {
-     setState({...stateLocal,
-               currentPage: page,
-               pages_slice: [prev_page - 2,
-                             prev_page - 1,
-                             prev_page,
-                             page,
-                             next_page],
-             })
-   }
- }
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container maxWidth="lg">
-        <Header title="Health Check Blog" sections={sections} />
+      <Container maxWidth="lg">        
         <main>
           <MainFeaturedPost post={mainFeaturedPost} />
           <Grid container spacing={4}>
@@ -235,53 +127,18 @@ const page_change = (page) => {
               <FeaturedPost key={post.title} post={post} />
             ))}
           </Grid>
-          {/* Begin 'about me' card */}
-      <Grid item xs={12} >
-        <Card className={classes.root}>
-            <CardContent>
-              <Typography variant="body2" gutterBottom>
-              <h1>Posts</h1>
-              {                
-                stateLocal.posts_slice
-                ? stateLocal.posts_slice.map(post =>
-                  <RenderPosts key={post.pid} post={post} />
-                 )
-                : null        
-      } 
-      <div>
-      <Sidebar
+          <Grid container spacing={5} className={classes.mainGrid}>
+            <PostList  />
+            <Sidebar
               title={sidebar.title}
               description={sidebar.description}
               archives={sidebar.archives}
               social={sidebar.social}
             />
-          <div className="FlexRow">
-              <button onClick={() => page_change(1) }> First </button>
-              <button onClick={() => page_change(stateLocal.currentPage - 1) }> Prev </button>
-                 {stateLocal.pages_slice.map((page) =>
-                     <div
-                       onClick={() => page_change(page)}
-                       className={stateLocal.currentPage === page
-                                     ? "pagination-active"
-                                     : "pagination-item" }
-                       key={page}>
-                         {page}
-                      </div>
-                 )}
-               <button onClick={() => page_change(stateLocal.currentPage + 1)}> Next </button>
-               <button onClick={() => page_change(stateLocal.max_page)}> Last </button>
-             </div>
-       </div>     
-      
-      </Typography>
-      
-            </CardContent>
-        </Card>
-      </Grid> 
-{/* End about me */}
+          </Grid>
         </main>
       </Container>
-      <Footer title="Health Check App" description="Epilepsy is not rare!" />
+      <Footer />
     </React.Fragment>
   );
 }

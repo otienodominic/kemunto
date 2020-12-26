@@ -8,23 +8,23 @@ const pool = new Pool({
     connectionString: DATABASE_URL,
   });
   
-const {verifyToken} = require('../middleware/verifyToken')
+const verifyToken = require('../middleware/verifyToken')
 
 
-const {registerUser, loginUser, getUserPosts, getOtherUserPosts, getOtherUserProfile} = require('../controllers/users')
+const {registerUser, loginUser, getUser,getUserPosts, getOtherUserPosts, getOtherUserProfile} = require('../controllers/users')
 const {getAllPosts,getOnePost, createPost, updatePost, deletePostComment, deletePost,updateLikes, getMyPosts} = require('../controllers/posts')
 const {postComment, updateComment, deleteComment, getAllPostComments} = require('../controllers/comments')
 /*
     POSTS ROUTES SECTION
 */
 
-router.get('/api/get/allposts', (req, res, next ) => {
+router.get('/api/get/allposts', verifyToken,(req, res, next ) => {
   pool.query("SELECT * FROM posts ORDER BY date_created DESC", (q_err, q_res) => {
       res.json(q_res.rows)
   })
 })
 
-router.get('/api/get/post', (req, res, next) => {
+router.get('/api/get/post', verifyToken,(req, res, next) => {
   const post_id = req.query.post_id
 
   pool.query(`SELECT * FROM posts
@@ -34,27 +34,9 @@ router.get('/api/get/post', (req, res, next) => {
       })
 } )
 
+router.put('/api/post/posttodb/:pid', verifyToken, updatePost)
 
-// router.post('/api/post/posttodb', (req, res, next) => {
-//   const values = [req.body.title, req.body.body, req.body.uid, req.body.username]
-//   pool.query(`INSERT INTO posts(title, body, user_id, author, date_created)
-//               VALUES($1, $2, $3, $4, NOW() )`, values, (q_err, q_res) => {
-//           if(q_err) return next(q_err);
-//           res.json(q_res.rows)
-//     })
-// })
-
-router.put('/api/post/posttodb/:pid', (req, res, next) => {
-  const values = [req.body.title, req.body.body, req.body.user_id, req.body.pid, req.body.author]  
-  pool.query(`UPDATE posts SET title= $1, body=$2, user_id=$3, author=$5, date_created=NOW()
-              WHERE pid = $4`, values,
-              (q_err, q_res) => {
-                console.log(q_res)
-                console.log(q_err)
-        })
-})
-
-router.delete('/api/delete/postcomments', (req, res, next) => {
+router.delete('/api/delete/postcomments', verifyToken,(req, res, next) => {
   const post_id = req.body.post_id
   pool.query(`DELETE FROM comments
               WHERE post_id = $1`, [post_id],
@@ -64,21 +46,22 @@ router.delete('/api/delete/postcomments', (req, res, next) => {
         })
 })
 
-router.delete('/api/delete/post', (req, res, next) => {
-  const post_id = req.body.post_id
-  pool.query(`DELETE FROM posts WHERE pid = $1`, [ post_id ],
-              (q_err, q_res) => {
-                res.json(q_res.rows)
-                console.log(q_err)
-       })
-})
+// router.delete('/api/delete/post/:pid', verifyToken,(req, res, next) => {
+//   const pid = req.params.pid
+//   pool.query(`DELETE FROM posts WHERE pid = $1`, [ pid ],
+//               (q_err, q_res) => {
+//                 res.json(q_res.rows)
+//                 console.log(q_err)
+//        })
+// })
 
+  router.delete('/api/delete/post/:post_id', verifyToken, deletePost)
 /*
     COMMENTS ROUTES SECTION
 */
 
 
-router.post('/api/post/commenttodb', (req, res, next) => {
+router.post('/api/post/commenttodb', verifyToken,(req, res, next) => {
   const values = [ req.body.comment, req.body.user_id, req.body.username, req.body.post_id]
 
   pool.query(`INSERT INTO comments(comment, user_id, author, post_id, date_created)
@@ -89,7 +72,7 @@ router.post('/api/post/commenttodb', (req, res, next) => {
       })
 })
 
-router.put('/api/put/commenttodb', (req, res, next) => {
+router.put('/api/put/commenttodb', verifyToken,(req, res, next) => {
   const values = [ req.body.comment, req.body.user_id, req.body.post_id, req.body.username, req.body.cid]
 
   pool.query(`UPDATE comments SET
@@ -102,7 +85,7 @@ router.put('/api/put/commenttodb', (req, res, next) => {
 })
 
 
-router.delete('/api/delete/comment', (req, res, next) => {
+router.delete('/api/delete/comment', verifyToken,(req, res, next) => {
   const cid = req.body.comment_id
   console.log(cid)
   pool.query(`DELETE FROM comments
@@ -114,7 +97,7 @@ router.delete('/api/delete/comment', (req, res, next) => {
 })
 
 
-router.get('/api/get/allpostcomments', (req, res, next) => {
+router.get('/api/get/allpostcomments', verifyToken,(req, res, next) => {
   const post_id = String(req.query.post_id)
   pool.query(`SELECT * FROM comments
               WHERE post_id=$1`, [ post_id ],
@@ -130,6 +113,8 @@ router.get('/api/get/allpostcomments', (req, res, next) => {
 
 router.post('/api/auth/register',registerUser)  
 router.post('/api/auth/login', loginUser )
+router.get('/api/auth/', verifyToken, getUser)
+
 
 // router.post('/api/posts/userprofiletodb', (req, res, next) => {
   
@@ -152,7 +137,7 @@ router.post('/api/auth/login', loginUser )
 //                 res.json(q_res.rows)
 //       })
 // } )
-router.get('/api/get/userposts', (req, res, next) => {
+router.get('/api/get/userposts', verifyToken,(req, res, next) => {
   const user_id = req.query.user_id
   console.log(user_id)
   pool.query(`SELECT * FROM posts
@@ -162,7 +147,7 @@ router.get('/api/get/userposts', (req, res, next) => {
       })
 } )
 
-router.put('/api/put/likes', (req, res, next) => {
+router.put('/api/put/likes', verifyToken,(req, res, next) => {
   const uid = [req.body.uid]
   const post_id = String(req.body.post_id)
 
@@ -181,7 +166,7 @@ router.put('/api/put/likes', (req, res, next) => {
 
 
 //Search Posts
-router.post('/api/get/searchpost', (req, res, next) => {
+router.post('/api/get/searchpost', verifyToken,(req, res, next) => {
   search_query = String(req.body.search_query)
   pool.query(`SELECT * FROM posts
               WHERE search_vector @@ to_tsquery($1)`,
@@ -192,13 +177,13 @@ router.post('/api/get/searchpost', (req, res, next) => {
 });
 
 //Save posts to db
-router.post('/api/post/posttodb', (req, res, next) => {
+router.post('/api/post/posttodb',verifyToken, (req, res, next) => {
   const body_vector = String(req.body.body)
   const title_vector = String(req.body.title)
-  const username_vector = String(req.body.username)
+  const username_vector = String(req.user.username)
 
   const search_vector = [title_vector, body_vector, username_vector]
-  const values = [req.body.title, req.body.body, search_vector, req.body.user_id, req.body.author]
+  const values = [req.body.title, req.body.body, search_vector, req.user.id, req.user.username]
   pool.query(`INSERT INTO
               posts(title, body, search_vector, user_id, author, date_created)
               VALUES($1, $2, to_tsvector($3), $4, $5, NOW())`,
@@ -210,7 +195,7 @@ router.post('/api/post/posttodb', (req, res, next) => {
 
 
 /* Retrieve another users profile from db based on username */
-router.get('/api/get/otheruserprofilefromdb', (req, res, next) => {
+router.get('/api/get/otheruserprofilefromdb', verifyToken,(req, res, next) => {
   // const email = [ "%" + req.query.email + "%"]
   const username = String(req.query.username)
   pool.query(`SELECT * FROM users
@@ -220,7 +205,7 @@ router.get('/api/get/otheruserprofilefromdb', (req, res, next) => {
   });
 });
 
-router.get('/search-users', (req, res, next) => {
+router.get('/search-users', verifyToken,(req, res, next) => {
    const email = [ "%" + req.query.email + "%"]
   // let userPattern = new RegExp("^"+req.body.query)
   // const email = userPattern  
@@ -233,7 +218,7 @@ router.get('/search-users', (req, res, next) => {
 
 
 //Get another user's posts based on username
-router.get('/api/get/otheruserposts', (req, res, next) => {
+router.get('/api/get/otheruserposts', verifyToken,(req, res, next) => {
   const username = String(req.query.username)
   pool.query(`SELECT * FROM posts
               WHERE author = $1`,
@@ -243,7 +228,7 @@ router.get('/api/get/otheruserposts', (req, res, next) => {
 });
 
 //Send Message to db
-router.post('/api/post/messagetodb', (req, res, next) => {
+router.post('/api/post/messagetodb', verifyToken,(req, res, next) => {
 
   const from_username = String(req.body.message_sender)
   const to_username = String(req.body.message_to)
@@ -261,7 +246,7 @@ router.post('/api/post/messagetodb', (req, res, next) => {
 });
 
 //Get another user's posts based on username
-router.get('/api/get/usermessages', (req, res, next) => {
+router.get('/api/get/usermessages', verifyToken,(req, res, next) => {
   const username = String(req.query.username)
   console.log(username)
   pool.query(`SELECT * FROM messages
@@ -272,7 +257,7 @@ router.get('/api/get/usermessages', (req, res, next) => {
 });
 
 //Delete a message with the message id
-router.delete('/api/delete/usermessage', (req, res, next) => {
+router.delete('/api/delete/usermessage', verifyToken,(req, res, next) => {
   const mid = req.body.mid
   pool.query(`DELETE FROM messages
               WHERE mid = $1`,
@@ -283,4 +268,37 @@ router.delete('/api/delete/usermessage', (req, res, next) => {
   });
 });
 
+router.post("/api/tokenIsValid", async (req, res) => {
+  try {
+    const token = req.header("x-auth-token");
+    if (!token) return res.json(false);
+
+    const verified = jwt.verify(token, JWT_SECRET);
+    if (!verified) return res.json(false);
+
+    const find_by_id = `SELECT email FROM users WHERE uid=$1`
+    const uid = [req.user.uid]
+
+    //const user = await User.findById(verified.id);
+
+    const user = await pool.query(find_by_id, uid)
+    if (!user) return res.json(false);
+
+    return res.json(true);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/api/users', verifyToken,async(req, res) => {
+  try {
+    const email = [req.user.email]
+    const user = await pool.query(`SELECT * FROM users WHERE email = $1`, email)
+    res.json({ 
+      username:user.username, 
+      id: user.id,})
+  } catch (error) {
+    res.status(500).json({ error: err.message });
+  }
+})
 module.exports = router

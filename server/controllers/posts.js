@@ -74,16 +74,22 @@ async function createPost(req, res) {
 }
 
 async function updatePost(req, res) {
-    const {title, body, user_id, pid, author}= req.body
-    const values = [title, body, user_id, pid, author]
-    if(!title || !body || !user_id || !pid || !author){
-        res.status(400).send({message: 'Title and article fields are required!'})     
+    const {pid} = req.params
+    const {title, body, user_id}= req.body
+    const {id} = req.user.id
+    if(user_id !== id){
+        res.status(401).send({message: 'You are unauthorised to update this post!'})
+    }
+    const values = [title, body, pid]
+    if(!title || !body){
+        res.status(400).send({message: 'Title and article body fields are required!'})     
        }
-    const update_post_query = `UPDATE posts SET title= $1, body=$2, user_id=$3, author=$5, date_created=NOW() WHERE pid = $4`
+    const update_post_query = `UPDATE posts SET title= $1, body=$2, date_created=NOW() WHERE pid = $3`
     const update_post = await pool.query(update_post_query, values)    
-    const new_post = update_post.rows
+    
     try {
-        res.send({ message: 'Post updated successfully!' })
+        // res.send({ message: 'Post updated successfully!' })
+        res.json(update_post.rows)
     } catch (error) {
         res.status(400).send({message: 'Failed to update post!'})
     }
@@ -112,16 +118,16 @@ async function deletePostComment(req, res) {
     }
 }
 
-async function deletePost(req, res) {
-    const post_id = req.body.post_id
+const deletePost = async(req, res)=> {
+    const post_id = req.params.post_id
     const delete_comment_query = `DELETE FROM posts WHERE pid = $1`
     await pool.query(delete_comment_query, [post_id])
-    if(!post_id || post_id===''){
-        res.status(400).json({
-            status: 'error',
-            error: 'No post selected',
-          });
-    }
+    // if(!post_id || post_id===''){
+    //     res.status(400).json({
+    //         status: 'error',
+    //         error: 'No post selected',
+    //       });
+    // }
     try {
         res.status(200).json({
             status: 'success',

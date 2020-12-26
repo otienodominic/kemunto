@@ -2,22 +2,23 @@ const jwt = require('jsonwebtoken')
 const {JWT_SECRET} = require('../config')
 
 async function verifyToken(req,res,next){
-    // const {authorization} = req.headers
-    //authorization === Bearer ewefwegwrherhe
-    let token = req.headers["x-access-token"];
-    if(!token){
-       return res.status(401).json({error:"you must be logged in"})
-    }
-    // const token = authorization.replace("Bearer ","")
-    jwt.verify(token,JWT_SECRET,(err,payload)=>{
-        if(err){
-         return   res.status(401).json({error:"unauthorized!"})
-        }
-        const {uid, username, email} = payload
-        req.user = {  uid, username, email, };
-          next();       
-        
-    })
+    try {
+        const token = req.header("x-auth-token");
+        if (!token)
+          return res
+            .status(401)
+            .json({ msg: "No authentication token, authorization denied." });
+    
+        const verified = jwt.verify(token, JWT_SECRET);
+        if (!verified)
+          return res
+            .status(401)
+            .json({ msg: "Token verification failed, authorization denied." });    
+        req.user = verified
+        next();
+      } catch (err) {
+        res.status(500).json({ error: err.message });
+      }
 }
-module.exports = {verifyToken}
+module.exports = verifyToken
 
