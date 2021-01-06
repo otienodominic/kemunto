@@ -9,8 +9,9 @@ import AuthState from './context/authContext/authState'
 import PostState from './context/postContext/postState'
 import setAuthToken from './utils/setAuthToken';
 import PrivateRoute from './components/routing/PrivateRoute';
-import Home from './components/Home/index'
+import Home from './components/Home'
 // import UpdateFile from './components/Files/UpdateFile'
+import NoteApp from './components/NoteApp'
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -28,6 +29,7 @@ function App() {
             {/* <PrivateRoute exact path='/update/:id' component={UpdateFile}/> */}
               <Route exact path='/register' component={Register} />
               <Route exact path='/login' component={Login} />
+              <Route exact path="/create" component={NoteApp} />
             </Switch>
           </div>
         </Router>

@@ -36,7 +36,7 @@ const public_sections = [
 
 const private_sections = [
   { title: 'Home', url: '/' },
-  { title: 'Create Post', url: '/create-post' },
+  { title: 'Create Post', url: '/create' },
   { title: 'Messages', url: '#' },
   { title: 'Profile', url: '#' },
   { title: 'Users', url: '#' },
