@@ -1,40 +1,26 @@
-import React from 'react';
-import './App.css';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Navbar from './components/layout/Navbar'
-//import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import Register from './components/pages/Register'
-import Login from './components/pages/Login'
-import AuthState from './context/authContext/authState'
-import PostState from './context/postContext/postState'
-import setAuthToken from './utils/setAuthToken';
-import PrivateRoute from './components/routing/PrivateRoute';
-import Home from './components/Home'
-// import UpdateFile from './components/Files/UpdateFile'
-import NoteApp from './components/NoteApp'
+import React from 'react'
+import Navigation from './components/Navigation'
+import PostsState from './context/posts/postsState'
+import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom'
+import PageRenderer from './page-renderer'
 
-if (localStorage.token) {
-  setAuthToken(localStorage.token);
-}
-
-function App() {
+export default function App() {
+  const user = {
+    firstName: 'Dominic',
+    lastName: 'Ngalo'
+  }
   return (
-    <AuthState>
-      <PostState>
-        <Router>
-          <div>
-            <Navbar />
-            <Switch>
-            <Home exact path='/' component={Home} />
-            {/* <PrivateRoute exact path='/update/:id' component={UpdateFile}/> */}
-              <Route exact path='/register' component={Register} />
-              <Route exact path='/login' component={Login} />
-              <Route exact path="/create" component={NoteApp} />
-            </Switch>
-          </div>
-        </Router>
-      </PostState>
-    </AuthState>
-  );
+    <PostsState>
+      <Router>
+        <div className='App'>
+          <Navigation user={user} />
+          <Switch>
+            <Route path='/:page' component={PageRenderer} />           
+            <Route path='/' render={()=> <Redirect to='/home' />} />           
+            <Route component={()=> 404} />
+          </Switch>
+        </div>
+      </Router>
+    </PostsState>
+  )
 }
-export default App;

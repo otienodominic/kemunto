@@ -7,24 +7,21 @@ const pool = new Pool({
     connectionString: DATABASE_URL,
   });
 async function registerUser(req, res) {
-  const {username, email, email_verified, password} = req.body
+  const {first_name, last_name,role_id, email, password} = req.body
   // Check Duplicate email
   const dublicate_email = (await pool.query(`SELECT * FROM users WHERE email = $1`,[email])).rowCount
   if(dublicate_email){
     return res.status(400).send({ message: 'User already exists please login!' })
   }
-  const checkFields = username &&  email && password
+  const checkFields = first_name && last_name &&  email && password
   const hashedPassword  = bcrypt.hashSync(password, 12)    
   
   if (!checkFields) {
     res.status(400).send({ message: 'All fields are required' })     
-  }
-  if(!email_verified){
-    res.status(400).send({ message: 'Email did not match!' })
   }  
   else{
-  const register_user_query = `INSERT INTO users(username, email, email_verified ,password, date_created) VALUES($1, $2, $3, $4, NOW()) ON CONFLICT DO NOTHING`
-  const values = [username, email, email_verified ,hashedPassword]
+  const register_user_query = `INSERT INTO users(first_name, last_name, email,role_id, password, date_created) VALUES($1, $2, $3, $4, $5, NOW()) ON CONFLICT DO NOTHING`
+  const values = [first_name, last_name, email, role_id ,hashedPassword]
   
   await pool.query(register_user_query, values)  
   try {    
@@ -57,17 +54,17 @@ async function loginUser(req, res) {
       }
       
       const token = jwt.sign({
-        id: find_user.rows[0].uid,
-        username: find_user.rows[0].username,
+        id: find_user.rows[0].id,
+        firstname: find_user.rows[0].first_name,
+        lastname: find_user.rows[0].last_name,
         email: find_user.rows[0].email }, JWT_SECRET);
       
       try {
         res.status(200).send({
             message: "Login Successful!",
             id: find_user.rows[0].uid,
-            username: find_user.rows[0].username,
-            email: find_user.rows[0].email, 
-            email_verified: find_user.rows[0].email_verified,           
+            firstname: find_user.rows[0].first_name,
+            email: find_user.rows[0].email,                      
             accessToken: token
           });
       } catch (error) {
