@@ -1,5 +1,6 @@
-.site-navigation {
-    background: white;
+@import './variables';
+.site-navigation{
+    background:white;
     height: 65px;
     width: 100%;
     display: flex;
@@ -16,7 +17,6 @@
         cursor: pointer;
         display: none;
     }
-
     .menu-content-container {
         display: flex;
         align-items: center;
@@ -32,7 +32,6 @@
             margin-left: 15px;
         }
     }
-
     .menu-title {
         font-weight: 500;
         font-size: 22px;

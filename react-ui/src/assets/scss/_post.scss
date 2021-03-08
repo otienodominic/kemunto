@@ -1,4 +1,15 @@
-.post-viewer {
-    padding: 40px;
-    padding-top: 80px;
+@import './variables';
+.post-view {
+    padding: 4em 0;
+}
+
+@media screen and (max-width: 900px) {
+    .site-content {
+        h1 {
+            margin: 5;
+            margin-block-start: 1.5em;
+            margin-block-end: 1.5em;
+        }
+
+    }
 }
