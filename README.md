@@ -85,31 +85,7 @@ If an app was previously deployed with [create-react-app-buildpack](https://gith
     ```
 1. If the app uses [Runtime configuration](https://github.com/mars/create-react-app-buildpack/blob/master/README.md#user-content-runtime-configuration), then follow [Runtime config](#user-content-runtime-config) below to keep it working.
 
-## Runtime Config
 
-create-react-app itself supports [configuration with environment variables](https://facebook.github.io/create-react-app/docs/adding-custom-environment-variables). These compile-time variables are embedded in the bundle during the build process, and may go stale when the app slug is promoted through a pipeline or otherwise changed without a rebuild. See create-react-app-buildpack's docs for further elaboration of [compile-time vs runtime variables](https://github.com/mars/create-react-app-buildpack/blob/master/README.md#user-content-compile-time-vs-runtime).
-
-[create-react-app-buildpack's runtime config](https://github.com/mars/create-react-app-buildpack/blob/master/README.md#user-content-runtime-configuration) makes it possible to dynamically change variables, no rebuild required. That runtime config technique may be applied to Node.js based apps such as this one.
-
-1. Add the inner buildpack to your app, so that the `heroku/nodejs` buildpack is last:
-
-   ```bash
-   heroku buildpacks:add -i 1 https://github.com/mars/create-react-app-inner-buildpack
-   
-   # Verify that create-react-app-inner-buildpack comes before nodejs
-   heroku buildpacks
-   ```
-2. Set the bundle location for runtime config injection:
-
-   ```bash
-   heroku config:set JS_RUNTIME_TARGET_BUNDLE='/app/react-ui/build/static/js/*.js'
-   ```
-3. Now, build the app with this new setup:
-
-   ```bash
-   git commit --allow-empty -m 'Enable runtime config with create-react-app-inner-buildpack'
-   git push heroku master
-   ```
 
 ## Local Development
 
