@@ -1,7 +1,8 @@
 {
   "name": "react-ui",
-  "version": "0.1.0",
+  "version": "0.1.0",  
   "private": true,
+  "homepage": "https://kemunto.herokuapp.com/",
   "dependencies": {
     "@emotion/css": "^11.0.0",
     "@emotion/react": "^11.1.1",
