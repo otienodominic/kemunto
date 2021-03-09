@@ -26,27 +26,27 @@ const AuthState = (props) => {
 
   // Load User
 
-  // const loadUser = async () => {
-  //   if (localStorage.token) {
-  //     setAuthToken(localStorage.token)
-  //   }
-  //   try {
-  //     const res = await axios.get('/api/auth')     
-  //     dispatch({
-  //       type: USER_LOADED,
-  //       payload: res.data
-  //     })
-  //   } catch (err) {
-  //     dispatch({
-  //       type: AUTH_ERROR,
-  //     })
-  //   }
-  // }
+  const loadUser = async () => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token)
+    }
+    try {
+      const res = await axios.get('/api')     
+      dispatch({
+        type: USER_LOADED,
+        payload: res.data
+      })
+    } catch (err) {
+      dispatch({
+        type: AUTH_ERROR,
+      })
+    }
+  }
 
   //Register User
   const register = async formData => {    
     try {
-      const res = await axios.post("/api/auth/register", formData)
+      const res = await axios.post("/api/register", formData)
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data
@@ -63,14 +63,18 @@ const AuthState = (props) => {
   //login user
 
   const login = async formData => {
-    
+    const config = {
+      header: {
+        'Content-Type': 'application/json'
+      }
+    }
     try {
-      const res = await axios.post('/api/auth/login', formData)
+      const res = await axios.post('/api/login', formData, config)
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data
       })
-      // loadUser()
+      loadUser()
     } catch (err) {
       dispatch({
         type: LOGIN_FAIL,
@@ -104,7 +108,7 @@ const AuthState = (props) => {
       loading: state.loading,
       register,
       login,
-      // loadUser,
+      loadUser,
       logout,
       clearErrors,
       setError

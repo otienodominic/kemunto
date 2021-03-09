@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose')
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 const logger = require('morgan')
@@ -7,7 +8,12 @@ const createError = require('http-errors')
 const cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 
-const indexRouter = require('./routes')
+const db = require('./database')
+
+const postRouter = require("./Routes/post");
+const userRoutes = require("./Routes/user");
+const profileRoutes = require("./Routes/profile");
+
 
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -31,9 +37,11 @@ if (!isDev && cluster.isMaster) {
   app.use(logger('dev'))
 
   // Priority serve any static files.
-  app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
-  app.use(express.urlencoded({ extended: false }));
-  app.use(cookieParser());
+const directory = path.join(__dirname, './images');
+app.use("/images", express.static(directory));
+// app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
   // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -42,7 +50,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
   // Answer API requests.
-  app.use('/', indexRouter)
+app.use("/api/posts", postRouter)
+app.use("/api/user", userRoutes);
+app.use("/api/profile", profileRoutes);
 
   // All remaining requests return the React app, so it can handle routing.
 

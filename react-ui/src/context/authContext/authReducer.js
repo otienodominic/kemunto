@@ -21,11 +21,10 @@ import {
         }
       case REGISTER_SUCCESS:
       case LOGIN_SUCCESS:
-        localStorage.setItem('token', payload.accessToken)
-        localStorage.setItem('user', payload)
+        localStorage.setItem('token', payload.token)
         return {
-          ...state,          
-          user: payload,
+          ...state,
+          ...payload,
           isAuthencated: true,
           loading: false,
           error: null
@@ -38,7 +37,7 @@ import {
         return {
           ...state,
           token: null,
-          isAuthencated: null,
+          isAuthencated: false,
           user: null,
           loading: false,
           error: payload

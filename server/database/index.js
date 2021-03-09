@@ -1,11 +1,17 @@
-const { Pool } = require('pg')
-const {DATABASE_URL} = require('../config')
+const mongoose = require('mongoose');
+const {MONGO_URI} = require('../config')
+mongoose.Promise = global.Promise;
 
-const pool = new Pool({DATABASE_URL: DATABASE_URL});
-if(pool){
-    console.log("connnected to Postgres database successfully")
-}else{
-    console.log('Database connection failed!')
-}
 
-module.exports = pool
+// Connect MongoDB at default port 27017.
+let mong = mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true
+}, (err) => {
+    if (!err) {
+        console.log('MongoDB Connection Succeeded.')
+    } else {
+        console.log('Error in DB connection: ' + err)
+    }
+});
