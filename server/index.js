@@ -44,13 +44,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const root = require('path').join(__dirname, 'react-ui', 'build')
-app.use(express.static(root));
+app.use("/images",express.static(root));
 app.get("*", (req, res) => {
     res.sendFile('index.html', { root });
 })
-
-
-
 
   // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
