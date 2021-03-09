@@ -36,10 +36,10 @@ if (!isDev && cluster.isMaster) {
   const app = express();
   app.use(logger('dev'))
 
-  // Priority serve any static files.
-const directory = path.join(__dirname, './images');
-app.use("/images", express.static(directory));
-// app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
+// Priority serve any static files.
+  // const directory = path.join(__dirname, './images');
+  // app.use("/images", express.static(directory));
+app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
