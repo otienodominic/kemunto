@@ -1,5 +1,5 @@
 module.exports={
-    DATABASE_URL:process.env.DATABASE_URL,
-    JWT_SECRET:process.env.JWT_SECRET,   
+    MONGO_URI:process.env.MONGO_URI ,
+    SECRET_KEY:process.env.SECRET_KEY ,   
     PORT:process.env.PORT
   }

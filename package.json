@@ -15,21 +15,28 @@
     "react-ui/node_modules"
   ],
   "dependencies": {
-    "bcrypt": "^5.0.0",
+    "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.16.4",
     "helmet": "^4.1.1",
     "http-errors": "^1.8.0",
+    "jimp": "^0.16.1",
     "js-crypto-key-utils": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
+    "method-override": "^3.0.0",
     "moment": "^2.29.1",
+    "mongoose": "^5.11.19",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "nodemon": "^2.0.7",
-    "pg": "^8.4.1"
+    "pg": "^8.4.1",
+    "sharp": "^0.27.2",
+    "shortid": "^2.2.16"
   },
   "repository": {
     "type": "git",

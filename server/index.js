@@ -1,5 +1,9 @@
 const express = require('express');
 const path = require('path');
+const methodOverride = require('method-override');
+const compression = require('compression');
+const mongoose = require('./db/mongoose');
+const cors = require('cors');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 const logger = require('morgan')
@@ -7,7 +11,9 @@ const createError = require('http-errors')
 const cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 
-const indexRouter = require('./routes')
+
+const ApiRouter = require('./routes/Api');
+
 
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -34,6 +40,9 @@ if (!isDev && cluster.isMaster) {
   app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
+  app.use(cors());
+  app.use(compression());
+  app.use(methodOverride());
 
   // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -42,7 +51,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
   // Answer API requests.
-  app.use('/', indexRouter)
+  app.use('/api', ApiRouter)
 
   // All remaining requests return the React app, so it can handle routing.
 

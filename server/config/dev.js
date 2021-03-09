@@ -1,7 +1,7 @@
 const { parsed: envs } = require("dotenv").config();
 module.exports={
-    DATABASE_URL:envs.DATABASE_URL,
-    JWT_SECRET:envs.JWT_SECRET,   
+    MONGO_URI :envs.MONGO_URI,
+    SECRET_KEY:envs.SECRET_KEY,   
     PORT: envs.PORT
   }
 
