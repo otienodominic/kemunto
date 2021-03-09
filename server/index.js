@@ -39,9 +39,18 @@ if (!isDev && cluster.isMaster) {
 // Priority serve any static files.
   // const directory = path.join(__dirname, './images');
   // app.use("/images", express.static(directory));
-app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
+// app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+const root = require('path').join(__dirname, 'react-ui', 'build')
+app.use(express.static(root));
+app.get("*", (req, res) => {
+    res.sendFile('index.html', { root });
+})
+
+
+
 
   // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -55,11 +64,10 @@ app.use("/api/user", userRoutes);
 app.use("/api/profile", profileRoutes);
 
   // All remaining requests return the React app, so it can handle routing.
-
   app.use(express.static(path.join(__dirname, 'public')));  
-  app.get('*', function(request, response) {
-    response.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'));
-  });
+  // app.get('*', function(request, response) {
+  //   response.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'));
+  // });
 
   app.listen(PORT, function () {
     console.error(`Node ${isDev ? 'development server' : 'cluster worker '+process.pid}: listening on port ${PORT}`);
