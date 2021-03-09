@@ -5,7 +5,7 @@ function SocialMedia() {
     return (<>
         <div className="footer-icon-sidebar">
             <ul className="navbar-nav">
-                {/* <li className="nav-item inline-block">
+                <li className="nav-item inline-block">
                     <a href="https://github.com/mehulk05" aria-label="Github" className="nav-link text-github"><i
                         className="fa fa-github"></i></a></li>
                 <li className="nav-item inline-block">
@@ -19,7 +19,7 @@ function SocialMedia() {
                 </li>
                 <li className="nav-item inline-block"><a href="https://www.linkedin.com/in/mehul-kothari-765868126/" aria-label="LinkedIn" className="nav-link"><i className="fa fa-linkedin"
                 ></i></a>
-                </li> */}
+                </li>
             </ul>
         </div>
 
