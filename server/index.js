@@ -39,10 +39,10 @@ app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true }))
 
   // Priority serve any static files.
-  /**app.use(express.static(path.resolve(__dirname, '../react-ui/build')));*/ // Kindly check this out Adomi
+  app.use(express.static(path.resolve(__dirname, '../react-ui/build'))); // Kindly check this out Adomi
 
-const directory = path.join(__dirname, './images');
-app.use("/images", express.static(directory));
+// const directory = path.join(__dirname, './images');
+// app.use("/images", express.static(directory));
 
   // Database connections here!!
 
