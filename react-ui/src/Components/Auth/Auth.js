@@ -176,7 +176,7 @@ export class Auth extends Component {
             {isLoading}
             {iserror}
 
-            <div className="container container-short py-5">
+            <div className="Container container-short py-5">
                 <h1 className="pt-2 py-2">{this.state.isLoginMode ? 'Login ' : 'Sign Up'}</h1>
                 <hr></hr>
                 <form onSubmit={this.mySubmitHandler} className="pt-4">

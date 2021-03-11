@@ -224,7 +224,7 @@ export class CreatePost extends Component {
         return (<>
             {isLoading}
             {iserror}
-            <div className="container container-short">
+            <div className="Container container-short">
                 <form onSubmit={this.mySubmitHandler} className="pt-4">
                     <h3 className="text-center mb-3">Create Profile</h3>
                     <div className="form-group">
@@ -245,7 +245,7 @@ export class CreatePost extends Component {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">Password </label>
+                        <label htmlFor="password">Short Bio </label>
                         <textarea
                             type='text'
                             name='bio'
