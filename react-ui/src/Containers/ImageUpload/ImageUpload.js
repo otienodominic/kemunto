@@ -35,6 +35,7 @@ const ImageUpload = props => {
     props.onInput(props.id, pickedFile, fileIsValid); return file
 
   };
+  
 
   const pickImageHandler = () => {
     filePickerRef.current.click();

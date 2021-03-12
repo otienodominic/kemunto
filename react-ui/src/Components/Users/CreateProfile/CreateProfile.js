@@ -134,7 +134,9 @@ export class CreatePost extends Component {
             formData.append('id', this.state.Post.id);
             formData.append('username', this.state.Post.username);
             formData.append('bio', this.state.Post.bio);
-            formData.append('image', this.state.Post.imagePath, this.state.Post.username);
+            formData.append('image', this.state.Post.imagePath
+            // , this.state.Post.username
+            );
 
         }
         else {
@@ -148,6 +150,7 @@ export class CreatePost extends Component {
         }
 
         if (path === "/profile/edit/:id") {
+            console.log(formData)
             Axios.put("/profile/edit/" + id, formData).then(data => {
                 this.setState(pre => ({
                     isloading: false
@@ -170,6 +173,7 @@ export class CreatePost extends Component {
                     isloading: true
                 }))
                 let profile = data.data.profile.username;
+                console.log(profile)
                 localStorage.setItem(
                     'profileData',
                     JSON.stringify({
@@ -224,7 +228,7 @@ export class CreatePost extends Component {
         return (<>
             {isLoading}
             {iserror}
-            <div className="Container container-short">
+            <div className="container container-short">
                 <form onSubmit={this.mySubmitHandler} className="pt-4">
                     <h3 className="text-center mb-3">Create Profile</h3>
                     <div className="form-group">

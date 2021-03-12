@@ -223,7 +223,7 @@ export class CreatePost extends Component {
 
             {isLoading}
             {iserror}
-            <div className="container-short">
+            <div className="container container-short">
                 <form onSubmit={this.mySubmitHandler} className="pt-4">
                 <h3 className="text-center mb-3">Create Post</h3>
                     <div className="form-group">

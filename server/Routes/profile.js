@@ -1,5 +1,11 @@
 const express = require('express')
 
+//Let's try this and come back with new results for now
+const cloudinary = require("../utils/cloudinary");
+const upload = require("../utils/multer");
+
+
+
 const multer = require("multer");
 const checkAuth = require("../middlewares/check-auth");
 const Profile = require('../models/profile');
@@ -11,7 +17,6 @@ const MIME_TYPE_MAP = {
     "image/jpg": "jpg",
     "image/gif": "gif"
 };
-
 
 
 const storage = multer.diskStorage({
@@ -38,17 +43,49 @@ const storage = multer.diskStorage({
 
 const router = express.Router();
 
+// router.post("/create", checkAuth, upload.single("image"), async (req, res) => {
+//     try {
+//       // Upload image to cloudinary
+//       const result = await cloudinary.uploader.upload(req.file.path);
+//        // Create new user
+//       let profile = new Profile({
+//         username: req.body.username,
+//         bio: req.body.bio,
+//         imagePath: result.secure_url,
+//         creator: req.userData.userId
+//         // cloudinary_id: result.public_id,
+//       });
+//       const user1 = await Profile.findOne({creator: req.userData.userId})
+//       if(user1){
+              
+//         return res.status(401).json({
+//           message: "Profile Already Exist"
+//         })
+//       }
+//       // Save user
+//       await profile.save();
+//     //   res.json(user);
+//       res.status(201).json({
+//         message: "Profile created!",
+//         profile: prof
+//       })
+//     } catch (err) {
+//       console.log(err);
+//     }}); 
+
+
+
 router.post("/create", checkAuth,
     multer({ storage: storage }).single("image"),
-    (req, res, next) => {
+    async(req, res, next) => {
        
-        
-        const url = req.protocol + "://" + req.get("host")
+        const result = await cloudinary.uploader.upload(req.file.filename); 
+        // const url = req.protocol + "://" + req.get("host")
         console.log(url)
         const profile = new Profile({
             username: req.body.username,
             bio: req.body.bio,
-            imagePath: url + "/images/" + req.file.filename,
+            imagePath: result.secure_url,
             creator: req.userData.userId
         })
    

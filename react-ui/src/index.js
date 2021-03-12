@@ -9,14 +9,25 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import 'jquery/dist/jquery.js';
+// setInterval(async () => {
+//   axios.get("https://zany-periodic-fisherman.glitch.me/test").then(data=>{
+//   console.log(data)
+// })
+// .catch(e=>{
+//   console.log(e.response)
+// })
+// },60 * 1000)
 
-let userData =  JSON.parse(localStorage.getItem("userData"))
+
+//axios.defaults.baseURL = 'http://localhost:3001/api';
+// axios.defaults.baseURL = 'https://zany-periodic-fisherman.glitch.me/api';
+    let userData =  JSON.parse(localStorage.getItem("userData"))
     let token
     if(userData){
         token= userData.token
     }
     
-    axios.defaults.headers.common['Authorization'] = {'Authorization': `Bearer ${token}`};
+    //axios.defaults.headers.common['Authorization'] = {'Authorization': `Bearer ${token}`};
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     axios.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -38,7 +49,9 @@ let userData =  JSON.parse(localStorage.getItem("userData"))
         console.log(error.response);
         return Promise.reject(error);
     });
-        
+    
+
+    
 
 ReactDOM.render(
   <React.StrictMode>
